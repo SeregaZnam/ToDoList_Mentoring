@@ -1,0 +1,39 @@
+.category-item {
+	width: 100%;
+	height: 35px;
+	border: 1px solid black;
+	border-radius: 3px;
+}
+.category-item__left {
+	float: left;
+	padding: 3px;
+}
+.category-item__right {
+	float: right;
+    padding: 3px;
+    margin-right: 5px;
+}
+.category-item__checkbox {
+    position: relative;
+    bottom: 4px;
+}
+.category-item__text {
+    position: relative;
+    bottom: 7px;
+    left: 5px;
+}
+.category-item__editing,
+.category-item__delete,
+.category-item__add {
+	width: 25px;
+	height: 25px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+.category-item__editing {
+	margin-left: 10px;
+}
+.category-item__delete {
+	margin-right: 5px;
+}
+.category-item__add {}

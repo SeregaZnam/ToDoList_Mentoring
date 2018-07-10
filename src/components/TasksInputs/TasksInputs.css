@@ -1,0 +1,22 @@
+.tasks-inputs {
+	height: 100px;
+}
+.tasks-inputs__done {
+	position: relative;
+    display: inline-block;
+    top: 10px;
+    margin-left: 10px;
+}
+.tasks-inputs__search {
+	position: relative;
+    display: inline-block;
+    top: 8px;
+    margin-left: 20px;
+}
+.tasks-inputs__title {
+	position: relative;
+    width: 40%;
+    display: inline-block;
+    top: 20px;
+    margin-left: 25px;
+}
