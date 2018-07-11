@@ -12,7 +12,7 @@ class TasksInputs extends Component {
 	      			id="tasks-inputs__checkbox--label"
 	      			className="tasks-inputs__checkbox"
 	      		/>
-	      		<label for="tasks-inputs__checkbox--label">Show done</label>
+	      		<label htmlFor="tasks-inputs__checkbox--label">Show done</label>
       		</div>
       		<div className="tasks-inputs__search">
       			<FormControl type="text" placeholder="Search"/>
