@@ -11,19 +11,22 @@ class TasksInputs extends Component {
 	      			type="checkbox" 
 	      			id="tasks-inputs__checkbox--label"
 	      			className="tasks-inputs__checkbox"
+              onChange={this.props.showDoneTasks.bind(this)}
 	      		/>
 	      		<label htmlFor="tasks-inputs__checkbox--label">Show done</label>
       		</div>
       		<div className="tasks-inputs__search">
-      			<FormControl type="text" placeholder="Search"/>
+      			<FormControl type="text" onChange={this.props.searchTaskInput.bind(this)} placeholder="Search"/>
       		</div>
       		<div className="tasks-inputs__title">
-            <InputGroup>
-  	      		<FormControl type="text" placeholder="Enter category title"/>
-    		    	<InputGroup.Button>
-    		        	<Button>Add</Button>
-    		    	</InputGroup.Button>
-            </InputGroup>
+            <form onSubmit={this.props.addTaskInCategory.bind(this)}>
+              <InputGroup>
+    	      		<FormControl type="text" placeholder="Text input with button"/>
+      		    	<InputGroup.Button>
+      		        	<Button type="submit">Add</Button>
+      		    	</InputGroup.Button>
+              </InputGroup>
+            </form>
 		    </div>
     	</div>
     );

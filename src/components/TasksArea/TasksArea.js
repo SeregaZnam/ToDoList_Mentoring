@@ -7,8 +7,15 @@ class TasksArea extends Component {
   render() {
     return (
     	<div className="tasks-area">
-      		<TasksInputs />
-      		<TaskList />
+      		<TasksInputs 
+      			addTaskInCategory={this.props.addTaskInCategory.bind(this)}
+      			searchTaskInput={this.props.searchTaskInput.bind(this)}
+      			showDoneTasks={this.props.showDoneTasks.bind(this)}
+      		/>
+      		<TaskList 
+      			categoryItems={this.props.categoryItems}
+      			handleCheckedTask={this.props.handleCheckedTask.bind(this)}
+      		/>
     	</div>
     );
   }

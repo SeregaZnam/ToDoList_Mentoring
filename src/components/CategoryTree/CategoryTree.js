@@ -11,9 +11,11 @@ class CategoryTree extends Component {
             key={index} 
             index={index}
             text={item.text}
+            checkedCategory={item.checkedCategory}
             flagChangeText={item.flagChangeText}
             deleteCategoryItem={this.props.deleteCategoryItem.bind(this)}
             changeCategoryText={this.props.changeCategoryText.bind(this)}
+            toggleShowTasks={this.props.toggleShowTasks.bind(this)}
             submitCategoryInput={this.props.submitCategoryInput.bind(this)}
             changeInputCategoryItem={this.props.changeInputCategoryItem.bind(this)}
         />

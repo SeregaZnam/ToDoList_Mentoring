@@ -2,18 +2,6 @@ import React, { Component } from 'react';
 import './CategoryItem.css';
 
 class CategoryItem extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            checkedInput: false
-        }
-    }
-
-    handleCheckboxChange() {
-        this.setState({ checkedInput: !this.state.checkedInput });
-    }
-
   render() {
     let categoryNode;
 
@@ -31,15 +19,18 @@ class CategoryItem extends Component {
                 />
         </form>;
     } else {
+        // For correcting the click processing we create different id
+        let idLabel = "category-item__checkbox--label-" + this.props.index;
+
         categoryNode = <span>
             <input 
                 type="checkbox"
-                id="category-item__checkbox--label"
+                id={idLabel}
                 className="category-item__checkbox"
-                checked={this.state.checkedInput}
-                onChange={this.handleCheckboxChange.bind(this)}
+                checked={this.props.checkedInput}
+                onChange={this.props.toggleShowTasks.bind(null, this.props.index)}
             />
-            <label htmlFor="category-item__checkbox--label" className="category-item__text">
+            <label htmlFor={idLabel} className="category-item__text">
                 {this.props.text}
             </label>
         </span>;
