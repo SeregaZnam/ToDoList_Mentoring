@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import CategoryArea from '../CategoryArea/CategoryArea';
 import TasksArea from '../TasksArea/TasksArea';
+import ModalWindow from '../ModalWindow/ModalWindow';
 import './App.css';
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 
+		// textModalTask, isDoneModal, indexModalCategory and indexModalTask are created to save data in the modal window
 		this.state = {
 			inputValue: '',
+			showModal: false,
+			textModalTask: null,
+			isDoneModal: null,
+			indexModalCategory: null,
+			indexModalTask: null,
 			categoryItems: [
 				{
 					text: 'Category Test',
@@ -73,7 +80,7 @@ class App extends Component {
 
 	// Changing text in a state when typing
 	changeInputCategoryItem(event) {
-		let index = event.target.getAttribute('data-index');
+		let index = event.target.dataset.index;
 
 		this.state.categoryItems[index].text = event.target.value;
 		this.setState({ categoryItems: this.state.categoryItems });
@@ -87,8 +94,8 @@ class App extends Component {
 
 	// Change checked checkbox task 
 	handleCheckedTask(event) {
-		let indexTask = event.target.getAttribute('data-index'),
-			indexCategory = event.target.getAttribute('data-category');
+		let indexTask = event.target.dataset.index,
+			indexCategory = event.target.dataset.category;
 
 		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = !this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask;
 		this.setState({ categoryItems: this.state.categoryItems });
@@ -167,6 +174,53 @@ class App extends Component {
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
+	/*******************/
+	/* Modal functions */
+	/*******************/
+
+	handleModalClose() {
+		this.setState({ showModal: false });
+	}
+
+	handleModalShow(event) {
+		let eventElement = event.target.previousElementSibling.previousElementSibling,
+			indexCategory = eventElement.dataset.category,
+			indexTask = eventElement.dataset.index;
+
+		this.state.indexModalCategory = indexCategory;
+		this.state.indexTask = indexTask;
+
+		this.setState({ 
+			indexModalCategory: this.state.indexModalCategory,
+			indexModalTask: this.state.indexTask,
+			textModalTask: this.state.categoryItems[indexCategory].taskList[indexTask].taskText,
+			isDoneModal: this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask
+		});
+	
+		this.setState({ showModal: true });
+	}
+
+	saveModalInfo(modalText, modalChecked) {
+		let indexCategory = this.state.indexModalCategory,
+			indexTask    = this.state.indexTask;
+
+		this.state.categoryItems[indexCategory].taskList[indexTask].taskText = modalText;
+		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = modalChecked;
+
+		this.setState({ 
+			showModal: false,
+			categoryItems: this.state.categoryItems
+		});
+	}
+
+	changeTextModalTask(event) {
+		this.setState({ textModalTask: event.target.value });
+	}
+
+	changeCheckboxDoneModal() {
+		this.setState({ isDoneModal: !this.state.isDoneModal });
+	}
+
   render() {
     return (
     	<div className="app-main">
@@ -187,6 +241,16 @@ class App extends Component {
       			addTaskInCategory={this.addTaskInCategory.bind(this)}
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
+      			handleModalShow={this.handleModalShow.bind(this)}
+      		/>
+      		<ModalWindow 
+      			showModal={this.state.showModal}
+      			textModalTask={this.state.textModalTask}
+      			isDoneModal={this.state.isDoneModal}
+      			handleModalClose={this.handleModalClose.bind(this)}
+      			saveModalInfo={this.saveModalInfo.bind(this)}
+      			changeTextModalTask={this.changeTextModalTask.bind(this)}
+      			changeCheckboxDoneModal={this.changeCheckboxDoneModal.bind(this)}
       		/>
       	</div>
     );

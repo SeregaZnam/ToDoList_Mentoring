@@ -15,6 +15,7 @@ class TasksArea extends Component {
       		<TaskList 
       			categoryItems={this.props.categoryItems}
       			handleCheckedTask={this.props.handleCheckedTask.bind(this)}
+      			handleModalShow={this.props.handleModalShow.bind(this)}
       		/>
     	</div>
     );

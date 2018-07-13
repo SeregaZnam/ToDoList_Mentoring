@@ -1,0 +1,8 @@
+.modal-window__done {
+	margin: 10px 0;
+}
+[for="modal-window__checkbox--label"] {
+	position: relative;
+    bottom: 2px;
+    margin-left: 5px;
+}
