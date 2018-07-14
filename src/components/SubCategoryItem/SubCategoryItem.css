@@ -3,7 +3,6 @@
 	width: 95%;
 	margin-left: 5%;
 	margin-bottom: -3px;
-	height: 35px;
 	border: 1px solid black;
 	border-radius: 3px;
 }
@@ -39,4 +38,13 @@
 .subcategory-item__delete {
 	margin-right: 5px;
 }
-.subcategory-item__add {}
+.subcategory-item__form {
+	width: 100px;
+    display: inline-block;
+    position: relative;
+    bottom: 7px;
+    margin-left: 5px;
+}
+.subcategory-item__form_input {
+	width: 100%;
+}

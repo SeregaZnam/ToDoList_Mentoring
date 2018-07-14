@@ -18,9 +18,26 @@ class App extends Component {
 			indexModalTask: null,
 			categoryItems: [
 				{
-					text: 'Category Test',
+					text: 'Category Test 1',
 					checkedCategory: false,
 					flagChangeText: false,
+					levelCategory: [1],
+					taskList: [
+						{taskText: 'To do test', flagChangeTask: true, show: true},
+						{taskText: 'To do test2', flagChangeTask: true, show: true},
+						{taskText: 'To do test3', flagChangeTask: false, show: true}
+					],
+					subCategoryItems: [
+						{text: 'subcategory test', checkedSubCategory: false, flagChangeTextSubCategory: true},
+						{text: 'subcategory test 2', checkedSubCategory: false, flagChangeTextSubCategory: false},
+						{text: 'subcategory test 3', checkedSubCategory: false, flagChangeTextSubCategory: false}
+					]
+				},
+				{
+					text: 'Category Test 2',
+					checkedCategory: false,
+					flagChangeText: false,
+					levelCategory: [2],
 					taskList: [
 						{taskText: 'To do test', flagChangeTask: true, show: true},
 						{taskText: 'To do test2', flagChangeTask: true, show: true},
@@ -28,9 +45,10 @@ class App extends Component {
 					]
 				},
 				{
-					text: 'Category Test',
+					text: 'Category Test 3 1',
 					checkedCategory: false,
 					flagChangeText: false,
+					levelCategory: [3, 1],
 					taskList: [
 						{taskText: 'To do test', flagChangeTask: true, show: true},
 						{taskText: 'To do test2', flagChangeTask: true, show: true},
@@ -48,11 +66,19 @@ class App extends Component {
 
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
+		let maxLevelCategory;
+		
 		event.preventDefault();
+		maxLevelCategory = this.state.categoryItems.map((item) => {
+			return item.levelCategory[0];
+		});
+		maxLevelCategory = Math.max(...maxLevelCategory) + 1;
+
 		this.state.categoryItems.push({ 
 			text: this.state.inputValue, 
 			checkedCategory: false,
 			flagChangeText: false,
+			levelCategory: [maxLevelCategory],
 			taskList: []
 		});
 		this.setState({
@@ -73,9 +99,14 @@ class App extends Component {
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
+	// Change category text when submiting
 	submitCategoryInput(event) {
+		let index = event.target.children[0].dataset.index;
+
 		event.preventDefault();
-		// ..
+		this.state.categoryItems[index].text = event.target.children[0].value;
+		this.state.categoryItems[index].flagChangeText = !this.state.categoryItems[index].flagChangeText;
+		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
 	// Changing text in a state when typing
@@ -221,6 +252,73 @@ class App extends Component {
 		this.setState({ isDoneModal: !this.state.isDoneModal });
 	}
 
+	/************************/
+	/* SubCategory function */
+	/************************/
+
+	addSubCategoryItem(levelCategory) {
+		let lengthNextLevel = levelCategory.length + 1,
+			lastNumberLevel = 0,
+			newNumberLevel = [];
+
+		this.state.categoryItems.forEach((item) => {
+			if (item.levelCategory.length == lengthNextLevel && levelCategory != item.levelCategory) {
+				lastNumberLevel < item.levelCategory[item.levelCategory.length - 1] ?
+					lastNumberLevel = item.levelCategory[item.levelCategory.length - 1] : 
+					lastNumberLevel;
+			}
+		});
+
+		for (var i = 0; i < levelCategory.length; i++) {
+			newNumberLevel.push(levelCategory[i]);
+		}
+
+		lastNumberLevel++;
+		newNumberLevel.push(lastNumberLevel);
+
+		this.state.categoryItems.push({
+			text: '',
+			checkedCategory: false,
+			flagChangeText: true,
+			levelCategory: newNumberLevel,
+			taskList: []
+		});
+
+		this.setState({ categoryItems: this.state.categoryItems });
+	}
+
+	changeInputSubCategoryItem(event) {
+		let categoryIndex    = event.target.dataset.categoryindex,
+			subCategoryIndex = event.target.dataset.subindex;
+
+		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].text = event.target.value;
+		this.setState({ categoryItems: this.state.categoryItems });
+	}
+
+	submitSubCategoryInput(event) {
+		let categoryIndex    = event.target.children[0].dataset.categoryindex,
+			subCategoryIndex = event.target.children[0].dataset.subindex;
+
+		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].text = event.target.children[0].value;
+		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].flagChangeTextSubCategory = !this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].flagChangeTextSubCategory;
+		this.setState({ categoryItems: this.state.categoryItems });
+	}
+
+	toggleShowSubTasks(indexCategory, indexSubCategory) {
+		this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].checkedSubCategory = !this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].checkedSubCategory;
+		this.setState({ categoryItems: this.state.categoryItems })
+	}
+
+	changeSubCategoryText(indexCategory, indexSubCategory) {
+		this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].flagChangeTextSubCategory = !this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].flagChangeTextSubCategory;
+		this.setState({ categoryItems: this.state.categoryItems });
+	}
+
+	deleteSubCategoryItem(indexCategory, indexSubCategory) {
+		this.state.categoryItems[indexCategory].subCategoryItems.splice(indexSubCategory, 1);
+		this.setState({ categoryItems: this.state.categoryItems });
+	}
+
   render() {
     return (
     	<div className="app-main">
@@ -234,6 +332,12 @@ class App extends Component {
     			toggleShowTasks={this.toggleShowTasks.bind(this)}
     			submitCategoryInput={this.submitCategoryInput.bind(this)}
     			changeInputCategoryItem={this.changeInputCategoryItem.bind(this)}
+    			addSubCategoryItem={this.addSubCategoryItem.bind(this)}
+    			changeInputSubCategoryItem={this.changeInputSubCategoryItem.bind(this)}
+    			submitSubCategoryInput={this.submitSubCategoryInput.bind(this)}
+    			toggleShowSubTasks={this.toggleShowSubTasks.bind(this)}
+    			changeSubCategoryText={this.changeSubCategoryText.bind(this)}
+    			deleteSubCategoryItem={this.deleteSubCategoryItem.bind(this)}
       		/>
       		<TasksArea 
       			categoryItems={this.state.categoryItems}
