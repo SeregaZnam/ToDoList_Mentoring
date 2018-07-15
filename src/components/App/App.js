@@ -16,6 +16,12 @@ class App extends Component {
 			isDoneModal: null,
 			indexModalCategory: null,
 			indexModalTask: null,
+			taskModalSelected: null,
+			taskInfo: {
+				task: null,
+				indexCategoryTask: null,
+				indexTask: null,
+			},
 			categoryItems: [
 				{
 					text: 'Category Test 1',
@@ -26,11 +32,28 @@ class App extends Component {
 						{taskText: 'To do test', flagChangeTask: true, show: true},
 						{taskText: 'To do test2', flagChangeTask: true, show: true},
 						{taskText: 'To do test3', flagChangeTask: false, show: true}
-					],
-					subCategoryItems: [
-						{text: 'subcategory test', checkedSubCategory: false, flagChangeTextSubCategory: true},
-						{text: 'subcategory test 2', checkedSubCategory: false, flagChangeTextSubCategory: false},
-						{text: 'subcategory test 3', checkedSubCategory: false, flagChangeTextSubCategory: false}
+					]
+				},
+				{
+					text: 'Category Test 2',
+					checkedCategory: false,
+					flagChangeText: false,
+					levelCategory: [1,1],
+					taskList: [
+						{taskText: 'To do test', flagChangeTask: true, show: true},
+						{taskText: 'To do test2', flagChangeTask: true, show: true},
+						{taskText: 'test', flagChangeTask: false, show: true}
+					]
+				},
+				{
+					text: 'Category Test 2',
+					checkedCategory: false,
+					flagChangeText: false,
+					levelCategory: [1,2],
+					taskList: [
+						{taskText: 'To do test', flagChangeTask: true, show: true},
+						{taskText: 'To do test2', flagChangeTask: true, show: true},
+						{taskText: 'To do test3', flagChangeTask: false, show: true}
 					]
 				},
 				{
@@ -48,11 +71,11 @@ class App extends Component {
 					text: 'Category Test 3 1',
 					checkedCategory: false,
 					flagChangeText: false,
-					levelCategory: [3, 1],
+					levelCategory: [3],
 					taskList: [
-						{taskText: 'To do test', flagChangeTask: true, show: true},
-						{taskText: 'To do test2', flagChangeTask: true, show: true},
-						{taskText: 'To do test3', flagChangeTask: false, show: true}
+						{taskText: 'To do test1 3', flagChangeTask: true, show: true},
+						{taskText: 'To do test2 3', flagChangeTask: true, show: true},
+						{taskText: 'To do test3 3', flagChangeTask: false, show: true}
 					]
 				}
 			]
@@ -88,8 +111,17 @@ class App extends Component {
 	}
 
 	// Deleting category item
-	deleteCategoryItem(index) {
-		this.state.categoryItems.splice(index, 1);
+	deleteCategoryItem(levelCategory, index) {
+		let categoryItems = this.state.categoryItems;
+		let indices = [];
+
+		for (let i = 0; i < categoryItems.length; i++) {
+			if (categoryItems[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
+				indices.push(i);
+			}
+		}
+
+		this.state.categoryItems.splice(index, indices.length);
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
@@ -220,23 +252,38 @@ class App extends Component {
 
 		this.state.indexModalCategory = indexCategory;
 		this.state.indexTask = indexTask;
+		this.state.taskModalSelected = indexCategory;
+		this.state.taskInfo = {
+			task: this.state.categoryItems[indexCategory].taskList[indexTask],
+			indexCategoryTask: indexCategory,
+			indexTask: indexTask
+		};
 
 		this.setState({ 
 			indexModalCategory: this.state.indexModalCategory,
 			indexModalTask: this.state.indexTask,
 			textModalTask: this.state.categoryItems[indexCategory].taskList[indexTask].taskText,
-			isDoneModal: this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask
+			isDoneModal: this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask,
+			taskModalSelected: this.state.taskModalSelected,
+			taskInfo: this.state.taskInfo
 		});
 	
 		this.setState({ showModal: true });
 	}
 
 	saveModalInfo(modalText, modalChecked) {
-		let indexCategory = this.state.indexModalCategory,
-			indexTask    = this.state.indexTask;
+		let indexCategory 		  = this.state.indexModalCategory,
+			indexTask     		  = this.state.indexTask,
+			indexModalCategory 	  = this.state.indexModalCategory,
+			indexModalTask 		  = this.state.indexModalTask,
+			taskInfoIndexCategory = this.state.taskInfo.indexCategoryTask,
+			taskInfoIndexTask     = this.state.taskInfo.indexTask,
+			taskModalSelected 	  = this.state.taskModalSelected;
 
 		this.state.categoryItems[indexCategory].taskList[indexTask].taskText = modalText;
 		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = modalChecked;
+		this.state.categoryItems[taskModalSelected].taskList.push(this.state.taskInfo.task);
+		this.state.categoryItems[taskInfoIndexCategory].taskList.splice(taskInfoIndexTask, 1);
 
 		this.setState({ 
 			showModal: false,
@@ -252,15 +299,30 @@ class App extends Component {
 		this.setState({ isDoneModal: !this.state.isDoneModal });
 	}
 
+	changeValueSelectModal(event) {
+		let indexCategory = event.target.dataset.indexcategory,
+			indexTask = event.target.dataset.indextask;
+
+		this.state.taskModalSelected = this.state.categoryItems.length;
+
+		this.state.categoryItems.forEach((item, index) => {
+			if (index == event.target.value) {
+				this.state.taskModalSelected = index;
+				this.setState({ taskModalSelected: this.state.taskModalSelected });
+			}
+		});
+	}
+
 	/************************/
 	/* SubCategory function */
 	/************************/
 
-	addSubCategoryItem(levelCategory) {
+	addSubCategoryItem(levelCategory, index) {
 		let lengthNextLevel = levelCategory.length + 1,
 			lastNumberLevel = 0,
 			newNumberLevel = [];
 
+		// Generation of a level number
 		this.state.categoryItems.forEach((item) => {
 			if (item.levelCategory.length == lengthNextLevel && levelCategory != item.levelCategory) {
 				lastNumberLevel < item.levelCategory[item.levelCategory.length - 1] ?
@@ -276,7 +338,16 @@ class App extends Component {
 		lastNumberLevel++;
 		newNumberLevel.push(lastNumberLevel);
 
-		this.state.categoryItems.push({
+		// Sorting category
+		for (let j = 0; j < this.state.categoryItems.length; j++) {
+			if (this.state.categoryItems[j].levelCategory.join('').indexOf(levelCategory.join('')) == 0 && 
+				levelCategory != this.state.categoryItems[j].levelCategory
+			) {
+				index = j;
+			}
+		}
+
+		this.state.categoryItems.splice(index + 1, 0, {
 			text: '',
 			checkedCategory: false,
 			flagChangeText: true,
@@ -288,11 +359,12 @@ class App extends Component {
 	}
 
 	changeInputSubCategoryItem(event) {
-		let categoryIndex    = event.target.dataset.categoryindex,
+		console.log('changeInputSubCategoryItem');
+		/*let categoryIndex    = event.target.dataset.categoryindex,
 			subCategoryIndex = event.target.dataset.subindex;
 
 		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].text = event.target.value;
-		this.setState({ categoryItems: this.state.categoryItems });
+		this.setState({ categoryItems: this.state.categoryItems });*/
 	}
 
 	submitSubCategoryInput(event) {
@@ -348,13 +420,18 @@ class App extends Component {
       			handleModalShow={this.handleModalShow.bind(this)}
       		/>
       		<ModalWindow 
+      			categoryItems={this.state.categoryItems}
       			showModal={this.state.showModal}
       			textModalTask={this.state.textModalTask}
       			isDoneModal={this.state.isDoneModal}
+      			indexModalCategory={this.state.indexModalCategory}
+      			indexModalTask={this.state.indexModalTask}
+      			taskModalSelected={this.state.taskModalSelected}
       			handleModalClose={this.handleModalClose.bind(this)}
       			saveModalInfo={this.saveModalInfo.bind(this)}
       			changeTextModalTask={this.changeTextModalTask.bind(this)}
       			changeCheckboxDoneModal={this.changeCheckboxDoneModal.bind(this)}
+      			changeValueSelectModal={this.changeValueSelectModal.bind(this)}
       		/>
       	</div>
     );

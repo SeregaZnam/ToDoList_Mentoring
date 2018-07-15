@@ -5,28 +5,7 @@ import './CategoryTree.css';
 
 class CategoryTree extends Component {
   render() {
-    // Skip data to output a category in CategoryItem
     let categoryItemNodes = this.props.categoryItems.map((item, index) => {
-        let subCategoryItems = null;
-
-        if (item.subCategoryItems) {
-            subCategoryItems = item.subCategoryItems.map((elem, subIndex) => {
-                return <SubCategoryItem 
-                    key={subIndex}
-                    categoryIndex={index}
-                    subCategoryIndex={subIndex}
-                    text={elem.text}
-                    checkedSubCategory={elem.checkedSubCategory}
-                    flagChangeTextSubCategory={elem.flagChangeTextSubCategory}
-                    changeInputSubCategoryItem={this.props.changeInputSubCategoryItem.bind(this)}
-                    submitSubCategoryInput={this.props.submitSubCategoryInput.bind(this)}
-                    toggleShowSubTasks={this.props.toggleShowSubTasks.bind(this)}
-                    changeSubCategoryText={this.props.changeSubCategoryText.bind(this)}
-                    deleteSubCategoryItem={this.props.deleteSubCategoryItem.bind(this)}
-                />;
-            })
-        }
-
         return <div key={index}>
             <CategoryItem 
                 index={index}
@@ -41,9 +20,6 @@ class CategoryTree extends Component {
                 changeInputCategoryItem={this.props.changeInputCategoryItem.bind(this)}
                 addSubCategoryItem={this.props.addSubCategoryItem.bind(this)}
             />
-            <div className="category-tree__subcategory">
-                {subCategoryItems}
-            </div>
         </div>
     });
 
