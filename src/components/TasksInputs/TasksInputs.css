@@ -1,5 +1,8 @@
 .tasks-inputs {
-	height: 100px;
+    height: 80px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
 }
 .tasks-inputs__done {
 	position: relative;
@@ -19,4 +22,15 @@
     display: inline-block;
     top: 20px;
     margin-left: 25px;
+}
+.tasks-inputs__search_delete {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    border: 1px solid black;
+    border-radius: 5px;
+    transform: scale(0.4);
+}
+.tasks-inputs__search_delete:hover {
+    cursor: pointer;
 }

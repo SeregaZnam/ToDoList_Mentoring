@@ -11,6 +11,7 @@ class TasksArea extends Component {
       			addTaskInCategory={this.props.addTaskInCategory.bind(this)}
       			searchTaskInput={this.props.searchTaskInput.bind(this)}
       			showDoneTasks={this.props.showDoneTasks.bind(this)}
+      			searchInputDelete={this.props.searchInputDelete.bind(this)}
       		/>
       		<TaskList 
       			categoryItems={this.props.categoryItems}

@@ -35,7 +35,7 @@ class App extends Component {
 					]
 				},
 				{
-					text: 'Category Test 2',
+					text: 'Category Test 1 1',
 					checkedCategory: false,
 					flagChangeText: false,
 					levelCategory: [1,1],
@@ -46,7 +46,7 @@ class App extends Component {
 					]
 				},
 				{
-					text: 'Category Test 2',
+					text: 'Category Test 1 2',
 					checkedCategory: false,
 					flagChangeText: false,
 					levelCategory: [1,2],
@@ -68,7 +68,7 @@ class App extends Component {
 					]
 				},
 				{
-					text: 'Category Test 3 1',
+					text: 'Category Test 3',
 					checkedCategory: false,
 					flagChangeText: false,
 					levelCategory: [3],
@@ -358,36 +358,14 @@ class App extends Component {
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
-	changeInputSubCategoryItem(event) {
-		console.log('changeInputSubCategoryItem');
-		/*let categoryIndex    = event.target.dataset.categoryindex,
-			subCategoryIndex = event.target.dataset.subindex;
+	searchInputDelete(event) {
+		event.target.previousElementSibling.value = '';
 
-		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].text = event.target.value;
-		this.setState({ categoryItems: this.state.categoryItems });*/
-	}
-
-	submitSubCategoryInput(event) {
-		let categoryIndex    = event.target.children[0].dataset.categoryindex,
-			subCategoryIndex = event.target.children[0].dataset.subindex;
-
-		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].text = event.target.children[0].value;
-		this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].flagChangeTextSubCategory = !this.state.categoryItems[categoryIndex].subCategoryItems[subCategoryIndex].flagChangeTextSubCategory;
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
-	toggleShowSubTasks(indexCategory, indexSubCategory) {
-		this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].checkedSubCategory = !this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].checkedSubCategory;
-		this.setState({ categoryItems: this.state.categoryItems })
-	}
-
-	changeSubCategoryText(indexCategory, indexSubCategory) {
-		this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].flagChangeTextSubCategory = !this.state.categoryItems[indexCategory].subCategoryItems[indexSubCategory].flagChangeTextSubCategory;
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
-	deleteSubCategoryItem(indexCategory, indexSubCategory) {
-		this.state.categoryItems[indexCategory].subCategoryItems.splice(indexSubCategory, 1);
+		this.state.categoryItems.forEach((item) => {
+				item.taskList.forEach((item) => {
+					item.show = true;
+				})
+			});
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
@@ -405,11 +383,6 @@ class App extends Component {
     			submitCategoryInput={this.submitCategoryInput.bind(this)}
     			changeInputCategoryItem={this.changeInputCategoryItem.bind(this)}
     			addSubCategoryItem={this.addSubCategoryItem.bind(this)}
-    			changeInputSubCategoryItem={this.changeInputSubCategoryItem.bind(this)}
-    			submitSubCategoryInput={this.submitSubCategoryInput.bind(this)}
-    			toggleShowSubTasks={this.toggleShowSubTasks.bind(this)}
-    			changeSubCategoryText={this.changeSubCategoryText.bind(this)}
-    			deleteSubCategoryItem={this.deleteSubCategoryItem.bind(this)}
       		/>
       		<TasksArea 
       			categoryItems={this.state.categoryItems}
@@ -418,6 +391,7 @@ class App extends Component {
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
       			handleModalShow={this.handleModalShow.bind(this)}
+      			searchInputDelete={this.searchInputDelete.bind(this)}
       		/>
       		<ModalWindow 
       			categoryItems={this.state.categoryItems}

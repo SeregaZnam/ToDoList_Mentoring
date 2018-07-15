@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import CategoryItem from '../CategoryItem/CategoryItem';
-import SubCategoryItem from '../SubCategoryItem/SubCategoryItem';
 import './CategoryTree.css';
 
 class CategoryTree extends Component {
