@@ -30,9 +30,9 @@ class App extends Component {
 					flagChangeText: false,
 					levelCategory: [1],
 					taskList: [
-						{taskText: 'To do test', flagChangeTask: true, show: true},
-						{taskText: 'To do test2', flagChangeTask: true, show: true},
-						{taskText: 'To do test3', flagChangeTask: false, show: true}
+						{taskText: 'To do item 1 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 3', flagChangeTask: false, show: true}
 					]
 				},
 				{
@@ -41,9 +41,9 @@ class App extends Component {
 					flagChangeText: false,
 					levelCategory: [1,1],
 					taskList: [
-						{taskText: 'To do test', flagChangeTask: true, show: true},
-						{taskText: 'To do test2', flagChangeTask: true, show: true},
-						{taskText: 'test', flagChangeTask: false, show: true}
+						{taskText: 'To do item 1 1 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 1 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 1 3', flagChangeTask: false, show: true}
 					]
 				},
 				{
@@ -52,9 +52,9 @@ class App extends Component {
 					flagChangeText: false,
 					levelCategory: [1,2],
 					taskList: [
-						{taskText: 'To do test', flagChangeTask: true, show: true},
-						{taskText: 'To do test2', flagChangeTask: true, show: true},
-						{taskText: 'To do test3', flagChangeTask: false, show: true}
+						{taskText: 'To do item 1 2 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2 3', flagChangeTask: false, show: true}
 					]
 				},
 				{
@@ -63,9 +63,9 @@ class App extends Component {
 					flagChangeText: false,
 					levelCategory: [2],
 					taskList: [
-						{taskText: 'To do test', flagChangeTask: true, show: true},
-						{taskText: 'To do test2', flagChangeTask: true, show: true},
-						{taskText: 'To do test3', flagChangeTask: false, show: true}
+						{taskText: 'To do item 2 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 2 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 2 3', flagChangeTask: false, show: true}
 					]
 				},
 				{
@@ -74,9 +74,9 @@ class App extends Component {
 					flagChangeText: false,
 					levelCategory: [3],
 					taskList: [
-						{taskText: 'To do test1 3', flagChangeTask: true, show: true},
-						{taskText: 'To do test2 3', flagChangeTask: true, show: true},
-						{taskText: 'To do test3 3', flagChangeTask: false, show: true}
+						{taskText: 'To do item 3 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 3 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 3 3', flagChangeTask: false, show: true}
 					]
 				}
 			]
