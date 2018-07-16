@@ -1,17 +1,26 @@
 {
   "name": "todo-list",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^16.4.1",
-    "react-bootstrap": "^0.32.1",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4"
-  },
+  "description": "A React.js project using Webpack",
+  "version": "1.0.0",
+  "author": "SeregaZnam",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "dev": "webpack-dev-server --hot --open",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "react": "^16.0.0",
+    "react-bootstrap": "^0.32.1",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^1.0.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.8.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
   }
 }

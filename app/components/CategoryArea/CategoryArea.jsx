@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AddCategoryTitle from '../AddCategoryTitle/AddCategoryTitle';
-import CategoryTree from '../CategoryTree/CategoryTree';
+import AddCategoryTitle from '../AddCategoryTitle/AddCategoryTitle.jsx';
+import CategoryTree from '../CategoryTree/CategoryTree.jsx';
 import './CategoryArea.css';
 
 class CategoryArea extends Component {

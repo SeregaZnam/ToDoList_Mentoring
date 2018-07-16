@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import TasksInputs from '../TasksInputs/TasksInputs';
-import TaskList from '../TaskList/TaskList';
+import TasksInputs from '../TasksInputs/TasksInputs.jsx';
+import TaskList from '../TaskList/TaskList.jsx';
 import './TasksArea.css';
 
 class TasksArea extends Component {
