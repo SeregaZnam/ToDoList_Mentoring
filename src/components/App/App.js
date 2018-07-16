@@ -17,6 +17,7 @@ class App extends Component {
 			indexModalCategory: null,
 			indexModalTask: null,
 			taskModalSelected: null,
+			disabledTaskInputs: true,
 			taskInfo: {
 				task: null,
 				indexCategoryTask: null,
@@ -89,25 +90,40 @@ class App extends Component {
 
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
-		let maxLevelCategory;
-		
-		event.preventDefault();
-		maxLevelCategory = this.state.categoryItems.map((item) => {
-			return item.levelCategory[0];
-		});
-		maxLevelCategory = Math.max(...maxLevelCategory) + 1;
+		let maxLevelCategory,
+			inputSearch        = event.target.querySelector('input'),
+			inputSearchTooltip = document.querySelector('.add-category-title__tooltip');
 
-		this.state.categoryItems.push({ 
-			text: this.state.inputValue, 
-			checkedCategory: false,
-			flagChangeText: false,
-			levelCategory: [maxLevelCategory],
-			taskList: []
-		});
-		this.setState({
-			inputValue: '',
-			categoryItems: this.state.categoryItems
-		});
+		event.preventDefault();
+
+		if (inputSearch.value) {
+			inputSearch.style.backgroundColor = 'white';
+
+			maxLevelCategory = this.state.categoryItems.map((item) => {
+				return item.levelCategory[0];
+			});
+			maxLevelCategory = Math.max(...maxLevelCategory) + 1;
+
+			this.state.categoryItems.push({ 
+				text: this.state.inputValue, 
+				checkedCategory: false,
+				flagChangeText: false,
+				levelCategory: [maxLevelCategory],
+				taskList: []
+			});
+			this.setState({
+				inputValue: '',
+				categoryItems: this.state.categoryItems
+			});
+		} else {
+			inputSearch.style.backgroundColor = '#ebccd1';
+			inputSearchTooltip.style.display = 'block';
+
+			setTimeout(() => {
+				inputSearch.style.backgroundColor = 'white';
+				inputSearchTooltip.style.display = 'none';
+			}, 3000);
+		}
 	}
 
 	// Deleting category item
@@ -151,8 +167,20 @@ class App extends Component {
 
 	// Show and hide tasks when clicking on a category
 	toggleShowTasks(index) {
+		let attributeDisabled;
+
 		this.state.categoryItems[index].checkedCategory = !this.state.categoryItems[index].checkedCategory;
-		this.setState({ categoryItems: this.state.categoryItems })
+		this.setState({ categoryItems: this.state.categoryItems });
+
+		attributeDisabled = this.state.categoryItems.some((item) => {
+			if (item.checkedCategory) { 
+				return true;
+			} 
+			return false;
+		})
+		
+		this.state.disabledTaskInputs = !attributeDisabled;
+		this.setState({ disabledTaskInputs: this.state.disabledTaskInputs });
 	}
 
 	// Change checked checkbox task 
@@ -166,25 +194,39 @@ class App extends Component {
 
 	// Add a task to the category
 	addTaskInCategory(event) {
-		let valueInput = event.target.getElementsByClassName('form-control')[0];
+		let addTaskInput 	    = event.target.querySelector('input'),
+			addTaskInputTooltip = event.target.querySelector('.tasks-inputs__title__tooltip');
 
 		event.preventDefault();
-		this.state.categoryItems.forEach((item) => {
-			if (item.checkedCategory) {
-				item.taskList.push({
-					taskText: valueInput.value, 
-					flagChangeTask: false, 
-					show: true
-				});
-				return;
-			}
-		})
-		this.setState({ categoryItems: this.state.categoryItems });
-		valueInput.value = '';
+
+		if (addTaskInput.value) {
+			this.state.categoryItems.forEach((item) => {
+				if (item.checkedCategory) {
+					item.taskList.push({
+						taskText: addTaskInput.value, 
+						flagChangeTask: false, 
+						show: true
+					});
+					return;
+				}
+			})
+			this.setState({ categoryItems: this.state.categoryItems });
+			addTaskInput.value = '';
+		} else {
+			addTaskInput.style.backgroundColor = '#ebccd1';
+			addTaskInputTooltip.style.display = 'block';
+
+			setTimeout(() => {
+				addTaskInput.style.backgroundColor = 'white';
+				addTaskInputTooltip.style.display = 'none';
+			}, 3000);
+		}
 	}
 
 	// Search Task
 	searchTaskInput(event) {
+		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox');
+
 		// Hide tasks with a completed input search
 		if (event.target.value) {
 			this.state.categoryItems.forEach((item) => {
@@ -192,38 +234,55 @@ class App extends Component {
 					item.show = false;
 				})
 			});
-			this.setState({ categoryItems: this.state.categoryItems });
 		} else {
-			this.state.categoryItems.forEach((item) => {
-				item.taskList.forEach((item) => {
-					item.show = true;
-				})
-			});
-			this.setState({ categoryItems: this.state.categoryItems });
+			if (showDoneCheckbox.checked) {
+				this.state.categoryItems.forEach((item) => {
+					item.taskList.forEach((item) => {
+						item.flagChangeTask ? 
+							item.show = true :
+							item.show = false;
+					})
+				});
+			} else {
+				this.state.categoryItems.forEach((item) => {
+					item.taskList.forEach((item) => {
+						item.show = true;
+					})
+				});
+			}
 		}
 
 		// Show test a searchable match
 		this.state.categoryItems.forEach((item, indexCategory) => {
 			if (item.checkedCategory) {
-				item.taskList.forEach((elem, indexTask) => {
-					if (elem.taskText.toLowerCase().indexOf(event.target.value) >= 0) {
-						elem.show = true;
-					}
-				})
+				if (showDoneCheckbox.checked) {
+					item.taskList.forEach((elem, indexTask) => {
+						if (elem.taskText.toLowerCase().indexOf(event.target.value) >= 0 && elem.flagChangeTask) {
+							elem.show = true;
+						}
+					})
+				} else {
+					item.taskList.forEach((elem, indexTask) => {
+						if (elem.taskText.toLowerCase().indexOf(event.target.value.toLowerCase()) >= 0) {
+							elem.show = true;
+						}
+					})
+				}
 			}
 		})
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
-	// Show done tasks
-	showDoneTasks(event) {
-		if (event.target.checked) {
+	searchInputDelete(event) {
+		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox');
+
+		event.target.previousElementSibling.value = '';
+
+		if (showDoneCheckbox.checked) {
 			this.state.categoryItems.forEach((item) => {
 				item.taskList.forEach((item) => {
 					if (item.flagChangeTask) {
 						item.show = true;
-					} else {
-						item.show = false;
 					}
 				})
 			});
@@ -233,6 +292,46 @@ class App extends Component {
 					item.show = true;
 				})
 			});
+		}
+		this.setState({ categoryItems: this.state.categoryItems });
+	}
+
+	// Show done tasks
+	showDoneTasks(event) {
+		let inputSearch = document.querySelector('.tasks-inputs__search input');
+
+		if (event.target.checked) {
+			this.state.categoryItems.forEach((item) => {
+				if (inputSearch.value) {
+					item.taskList.forEach((item) => {
+						item.flagChangeTask && item.show ? 
+							item.show = true : 
+							item.show = false;
+					})	
+				} else {
+					item.taskList.forEach((item) => {
+						item.flagChangeTask ?
+							item.show = true :
+							item.show = false;
+					})
+				}
+			});
+		} else {
+			if (inputSearch.value) {
+				this.state.categoryItems.forEach((item) => {
+					item.taskList.forEach((item) => {
+						if (item.taskText.toLowerCase().indexOf(inputSearch.value.toLowerCase()) >= 0) {
+							item.show = true;
+						}
+					})
+				})
+			} else {
+				this.state.categoryItems.forEach((item) => {
+					item.taskList.forEach((item) => {
+						item.show = true;
+					})
+				});
+			}
 		}
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
@@ -282,8 +381,12 @@ class App extends Component {
 
 		this.state.categoryItems[indexCategory].taskList[indexTask].taskText = modalText;
 		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = modalChecked;
-		this.state.categoryItems[taskModalSelected].taskList.push(this.state.taskInfo.task);
-		this.state.categoryItems[taskInfoIndexCategory].taskList.splice(taskInfoIndexTask, 1);
+
+		// If the select was changed
+		if (indexCategory != taskModalSelected) {
+			this.state.categoryItems[taskModalSelected].taskList.push(this.state.taskInfo.task);
+			this.state.categoryItems[taskInfoIndexCategory].taskList.splice(taskInfoIndexTask, 1);
+		}
 
 		this.setState({ 
 			showModal: false,
@@ -358,17 +461,6 @@ class App extends Component {
 		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
-	searchInputDelete(event) {
-		event.target.previousElementSibling.value = '';
-
-		this.state.categoryItems.forEach((item) => {
-				item.taskList.forEach((item) => {
-					item.show = true;
-				})
-			});
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
   render() {
     return (
     	<div className="app-main">
@@ -386,6 +478,7 @@ class App extends Component {
       		/>
       		<TasksArea 
       			categoryItems={this.state.categoryItems}
+      			disabledTaskInputs={this.state.disabledTaskInputs}
       			handleCheckedTask={this.handleCheckedTask.bind(this)}
       			addTaskInCategory={this.addTaskInCategory.bind(this)}
       			searchTaskInput={this.searchTaskInput.bind(this)}

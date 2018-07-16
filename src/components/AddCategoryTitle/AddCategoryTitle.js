@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FormGroup, Button, InputGroup, FormControl } from 'react-bootstrap';
+import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
 import './AddCategoryTitle.css';
 
 class AddCategoryTitle extends Component {
@@ -23,6 +23,13 @@ class AddCategoryTitle extends Component {
 				        	<Button type="submit">Add</Button>
 				    	</InputGroup.Button>
 					</InputGroup>
+					<Tooltip 
+						placement="bottom" 
+						className="in add-category-title__tooltip" 
+						id="tooltip-bottom"
+					>
+						Fill in the field
+					</Tooltip>
 				</FormGroup>
 			</form>
     	</div>

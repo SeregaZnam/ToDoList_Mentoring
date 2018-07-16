@@ -8,6 +8,7 @@ class TasksArea extends Component {
     return (
     	<div className="tasks-area">
       		<TasksInputs 
+            disabledTaskInputs={this.props.disabledTaskInputs}          
       			addTaskInCategory={this.props.addTaskInCategory.bind(this)}
       			searchTaskInput={this.props.searchTaskInput.bind(this)}
       			showDoneTasks={this.props.showDoneTasks.bind(this)}
