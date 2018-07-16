@@ -117,11 +117,11 @@ class App extends Component {
 			});
 		} else {
 			inputSearch.style.backgroundColor = '#ebccd1';
-			inputSearchTooltip.style.display = 'block';
+			inputSearchTooltip.style.display  = 'block';
 
 			setTimeout(() => {
 				inputSearch.style.backgroundColor = 'white';
-				inputSearchTooltip.style.display = 'none';
+				inputSearchTooltip.style.display  = 'none';
 			}, 3000);
 		}
 	}
@@ -129,7 +129,7 @@ class App extends Component {
 	// Deleting category item
 	deleteCategoryItem(levelCategory, index) {
 		let categoryItems = this.state.categoryItems;
-		let indices = [];
+		let indices       = [];
 
 		for (let i = 0; i < categoryItems.length; i++) {
 			if (categoryItems[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
@@ -185,7 +185,7 @@ class App extends Component {
 
 	// Change checked checkbox task 
 	handleCheckedTask(event) {
-		let indexTask = event.target.dataset.index,
+		let indexTask     = event.target.dataset.index,
 			indexCategory = event.target.dataset.category;
 
 		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = !this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask;
@@ -214,11 +214,11 @@ class App extends Component {
 			addTaskInput.value = '';
 		} else {
 			addTaskInput.style.backgroundColor = '#ebccd1';
-			addTaskInputTooltip.style.display = 'block';
+			addTaskInputTooltip.style.display  = 'block';
 
 			setTimeout(() => {
 				addTaskInput.style.backgroundColor = 'white';
-				addTaskInputTooltip.style.display = 'none';
+				addTaskInputTooltip.style.display  = 'none';
 			}, 3000);
 		}
 	}
@@ -345,13 +345,13 @@ class App extends Component {
 	}
 
 	handleModalShow(event) {
-		let eventElement = event.target.previousElementSibling.previousElementSibling,
+		let eventElement  = event.target.previousElementSibling.previousElementSibling,
 			indexCategory = eventElement.dataset.category,
-			indexTask = eventElement.dataset.index;
+			indexTask     = eventElement.dataset.index;
 
 		this.state.indexModalCategory = indexCategory;
-		this.state.indexTask = indexTask;
-		this.state.taskModalSelected = indexCategory;
+		this.state.indexTask 	      = indexTask;
+		this.state.taskModalSelected  = indexCategory;
 		this.state.taskInfo = {
 			task: this.state.categoryItems[indexCategory].taskList[indexTask],
 			indexCategoryTask: indexCategory,
@@ -404,7 +404,7 @@ class App extends Component {
 
 	changeValueSelectModal(event) {
 		let indexCategory = event.target.dataset.indexcategory,
-			indexTask = event.target.dataset.indextask;
+			indexTask 	  = event.target.dataset.indextask;
 
 		this.state.taskModalSelected = this.state.categoryItems.length;
 
@@ -423,7 +423,7 @@ class App extends Component {
 	addSubCategoryItem(levelCategory, index) {
 		let lengthNextLevel = levelCategory.length + 1,
 			lastNumberLevel = 0,
-			newNumberLevel = [];
+			newNumberLevel  = [];
 
 		// Generation of a level number
 		this.state.categoryItems.forEach((item) => {
