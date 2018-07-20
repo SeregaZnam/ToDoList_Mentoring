@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Button, FormControl, FormGroup } from 'react-bootstrap';
 import './ModalWindow.css';
 
@@ -62,5 +63,24 @@ class ModalWindow extends Component {
     );
   }
 }
+
+ModalWindow.propTypes = {
+  categoryItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string
+    })
+  ),
+  changeCheckboxDoneModal: PropTypes.func.isRequired,
+  changeTextModalTask: PropTypes.func.isRequired,
+  changeValueSelectModal: PropTypes.func.isRequired,
+  handleModalClose: PropTypes.func.isRequired,
+  indexModalCategory: PropTypes.string,
+  indexModalTask: PropTypes.string,
+  isDoneModal: PropTypes.bool,
+  saveModalInfo: PropTypes.func.isRequired,
+  showModal: PropTypes.bool.isRequired,
+  taskModalSelected: PropTypes.string,
+  textModalTask: PropTypes.string
+};
 
 export default ModalWindow;

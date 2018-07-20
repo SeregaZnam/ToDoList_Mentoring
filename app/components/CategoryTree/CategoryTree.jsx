@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CategoryItem from '../CategoryItem/CategoryItem.jsx';
 import './CategoryTree.css';
 
@@ -29,5 +30,23 @@ class CategoryTree extends Component {
     );
   }
 }
+
+CategoryTree.propTypes = {
+    addSubCategoryItem: PropTypes.func.isRequired,
+    categoryItems: PropTypes.arrayOf(
+        PropTypes.shape({
+            checkedCategory: PropTypes.bool.isRequired,
+            flagChangeText: PropTypes.bool.isRequired,
+            levelCategory: PropTypes.array.isRequired,
+            taskList: PropTypes.array,
+            text: PropTypes.string
+        })
+    ),
+    changeCategoryText: PropTypes.func.isRequired,
+    changeInputCategoryItem: PropTypes.func.isRequired,
+    deleteCategoryItem: PropTypes.func.isRequired,
+    submitCategoryInput: PropTypes.func.isRequired,
+    toggleShowTasks: PropTypes.func.isRequired
+};
 
 export default CategoryTree;

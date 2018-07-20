@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import AddCategoryTitle from '../AddCategoryTitle/AddCategoryTitle.jsx';
 import CategoryTree from '../CategoryTree/CategoryTree.jsx';
 import './CategoryArea.css';
@@ -30,5 +31,18 @@ class CategoryArea extends Component {
     );
   }
 }
+
+CategoryArea.propTypes = {
+  inputValue: PropTypes.string,
+  categoryItems: PropTypes.array,
+  addCategory: PropTypes.func.isRequired,
+  addSubCategoryItem: PropTypes.func.isRequired,
+  changeCategoryText: PropTypes.func.isRequired,
+  changeInputCategoryItem: PropTypes.func.isRequired,
+  deleteCategoryItem: PropTypes.func.isRequired,
+  handleChangeInput: PropTypes.func.isRequired,
+  submitCategoryInput: PropTypes.func.isRequired,
+  toggleShowTasks: PropTypes.func.isRequired
+};
 
 export default CategoryArea;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './CategoryItem.css';
 
 class CategoryItem extends Component {
@@ -63,5 +64,19 @@ class CategoryItem extends Component {
     );
   }
 }
+
+CategoryItem.propTypes = {
+    addSubCategoryItem: PropTypes.func.isRequired,
+    changeCategoryText: PropTypes.func.isRequired,
+    changeInputCategoryItem: PropTypes.func.isRequired,
+    checkedCategory: PropTypes.bool.isRequired,
+    deleteCategoryItem: PropTypes.func.isRequired,
+    flagChangeText: PropTypes.bool.isRequired,
+    index: PropTypes.number.isRequired,
+    levelCategory: PropTypes.array.isRequired,
+    submitCategoryInput: PropTypes.func.isRequired,
+    text: PropTypes.string,
+    toggleShowTasks: PropTypes.func.isRequired
+};
 
 export default CategoryItem;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
 import './AddCategoryTitle.css';
 
@@ -36,5 +37,11 @@ class AddCategoryTitle extends Component {
     );
   }
 }
+
+AddCategoryTitle.propTypes = {
+	inputValue: PropTypes.string,
+	addCategory: PropTypes.func.isRequired,
+	handleChangeInput: PropTypes.func.isRequired
+};
 
 export default AddCategoryTitle;

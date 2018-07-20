@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './TaskItem.css';
 
 class TaskItem extends Component {
@@ -22,5 +23,15 @@ class TaskItem extends Component {
     );
   }
 }
+
+TaskItem.propTypes = {
+  flagChangeTask: PropTypes.bool.isRequired,
+  handleCheckedTask: PropTypes.func.isRequired,
+  handleModalShow: PropTypes.func.isRequired,
+  indexCategory: PropTypes.number.isRequired,
+  indexTasks: PropTypes.number.isRequired,
+  show: PropTypes.bool.isRequired,
+  taskText: PropTypes.string.isRequired
+};
 
 export default TaskItem;

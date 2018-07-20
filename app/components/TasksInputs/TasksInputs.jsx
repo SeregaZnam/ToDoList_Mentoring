@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
 import './TasksInputs.css';
 
@@ -52,5 +53,13 @@ class TasksInputs extends Component {
     );
   }
 }
+
+TasksInputs.propTypes = {
+  addTaskInCategory: PropTypes.func.isRequired,
+  disabledTaskInputs: PropTypes.bool.isRequired,
+  searchInputDelete: PropTypes.func.isRequired,
+  searchTaskInput: PropTypes.func.isRequired,
+  showDoneTasks: PropTypes.func.isRequired
+};
 
 export default TasksInputs;

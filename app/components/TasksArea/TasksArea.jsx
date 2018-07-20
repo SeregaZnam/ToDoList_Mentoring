@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TasksInputs from '../TasksInputs/TasksInputs.jsx';
 import TaskList from '../TaskList/TaskList.jsx';
 import './TasksArea.css';
@@ -23,5 +24,16 @@ class TasksArea extends Component {
     );
   }
 }
+
+TasksArea.propTypes = {
+  addTaskInCategory: PropTypes.func.isRequired,
+  categoryItems: PropTypes.array,
+  disabledTaskInputs: PropTypes.bool.isRequired,
+  handleCheckedTask: PropTypes.func.isRequired,
+  handleModalShow: PropTypes.func.isRequired,
+  searchInputDelete: PropTypes.func.isRequired,
+  searchTaskInput: PropTypes.func.isRequired,
+  showDoneTasks: PropTypes.func.isRequired
+};
 
 export default TasksArea;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import TaskItem from '../TaskItem/TaskItem.jsx';
 import './TaskList.css';
 
@@ -30,5 +31,17 @@ class TaskList extends Component {
     );
   }
 }
+
+TaskList.propTypes = {
+  categoryItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      taskText: PropTypes.string,
+      flagChangeTask: PropTypes.bool,
+      show: PropTypes.bool
+    })
+  ),
+  handleCheckedTask: PropTypes.func.isRequired,
+  handleModalShow: PropTypes.func.isRequired
+};
 
 export default TaskList;
