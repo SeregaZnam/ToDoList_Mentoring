@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
+import WriteNoteInput from '../WriteNoteInput/WriteNoteInput.jsx';
 import './AddCategoryTitle.css';
 
 class AddCategoryTitle extends Component {
@@ -11,28 +11,11 @@ class AddCategoryTitle extends Component {
   render() {
     return (
     	<div className="add-category-title">
-    		<form onSubmit={this.props.addCategory.bind(this)}>
-	    		<FormGroup>
-					<InputGroup>
-						<FormControl 
-							value={this.props.inputValue}
-							type="text" 
-							placeholder="Enter category title"
-							onChange={this.props.handleChangeInput.bind(this)}
-						/>
-				    	<InputGroup.Button>
-				        	<Button type="submit">Add</Button>
-				    	</InputGroup.Button>
-					</InputGroup>
-					<Tooltip 
-						placement="bottom" 
-						className="in add-category-title__tooltip" 
-						id="tooltip-bottom"
-					>
-						Fill in the field
-					</Tooltip>
-				</FormGroup>
-			</form>
+    		<WriteNoteInput 
+    			inputValue={this.props.inputValue}
+				addNote={this.props.addCategory}
+				handleChangeInput={this.props.handleChangeInput}
+    		/>
     	</div>
     );
   }

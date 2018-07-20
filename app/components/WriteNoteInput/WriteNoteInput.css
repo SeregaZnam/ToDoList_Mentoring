@@ -1,0 +1,13 @@
+.add-note-title input {
+	transition: all 0.2s ease-out;
+}
+.add-note-title__tooltip {
+	display: none;
+	margin-left: 50px;
+}
+.add-note-title.error input {
+    background-color: #ebccd1;
+}
+.add-note-title.error .add-note-title__tooltip {
+    display: block;
+}

@@ -11,10 +11,3 @@
     top: 50%;
     transform: translateY(-50%);
 }
-.add-category-title input {
-	transition: all 0.2s ease-out;
-}
-.add-category-title__tooltip {
-	display: none;
-	margin-left: 50px;
-}

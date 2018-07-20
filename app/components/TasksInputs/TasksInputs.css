@@ -7,8 +7,7 @@
 .tasks-inputs__done {
     position: relative;
     display: inline-block;
-    top: 50%;
-    transform: translateY(-105%);
+    top: 5%;
     margin-left: 10px;
 }
 .tasks-inputs__done input {
@@ -21,8 +20,7 @@
     position: relative;
     display: inline-block;
     margin-left: 20px;
-    top: 50%;
-    transform: translateY(-85%);
+    top: 5%;
 }
 .tasks-inputs__search input {
     transition: all 0.2s ease-out;
@@ -32,8 +30,7 @@
     width: 40%;
     display: inline-block;
     margin-left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 33%;
 }
 .tasks-inputs__search_delete {
     position: absolute;
@@ -45,13 +42,4 @@
 }
 .tasks-inputs__search_delete:hover {
     cursor: pointer;
-}
-.tasks-inputs__title input {
-    transition: all 0.2s ease-out;
-}
-.tasks-inputs__title__tooltip {
-    display: none;
-    position: absolute;
-    top: 34px;
-    left: 40px;
 }

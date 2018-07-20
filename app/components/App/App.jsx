@@ -91,8 +91,9 @@ class App extends Component {
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
 		let maxLevelCategory,
-			inputSearch        = event.target.querySelector('input'),
-			inputSearchTooltip = document.querySelector('.add-category-title__tooltip');
+			formControl		   = event.target,
+			inputSearch        = formControl.querySelector('input'),
+			inputSearchTooltip = document.querySelector('.add-note-title__tooltip');
 
 		event.preventDefault();
 
@@ -116,12 +117,10 @@ class App extends Component {
 				categoryItems: this.state.categoryItems
 			});
 		} else {
-			inputSearch.style.backgroundColor = '#ebccd1';
-			inputSearchTooltip.style.display  = 'block';
+			formControl.classList.add('error');
 
 			setTimeout(() => {
-				inputSearch.style.backgroundColor = 'white';
-				inputSearchTooltip.style.display  = 'none';
+				formControl.classList.remove('error');
 			}, 3000);
 		}
 	}
@@ -194,8 +193,9 @@ class App extends Component {
 
 	// Add a task to the category
 	addTaskInCategory(event) {
-		let addTaskInput 	    = event.target.querySelector('input'),
-			addTaskInputTooltip = event.target.querySelector('.tasks-inputs__title__tooltip');
+		let elemEvent			= event.target,
+			addTaskInput 	    = elemEvent.querySelector('input'),
+			addTaskInputTooltip = elemEvent.querySelector('.tasks-inputs__title__tooltip');
 
 		event.preventDefault();
 
@@ -213,12 +213,10 @@ class App extends Component {
 			this.setState({ categoryItems: this.state.categoryItems });
 			addTaskInput.value = '';
 		} else {
-			addTaskInput.style.backgroundColor = '#ebccd1';
-			addTaskInputTooltip.style.display  = 'block';
+			elemEvent.classList.add('error');
 
 			setTimeout(() => {
-				addTaskInput.style.backgroundColor = 'white';
-				addTaskInputTooltip.style.display  = 'none';
+				elemEvent.classList.remove('error');
 			}, 3000);
 		}
 	}
