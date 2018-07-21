@@ -490,7 +490,7 @@ class App extends Component {
       		<TasksArea 
       			categoryItems={this.state.categoryItems}
       			disabledTaskInputs={this.state.disabledTaskInputs}
-      			handleCheckedTask={this.handleCheckedTask}
+      			handleCheckedTask={this.handleCheckedTask.bind(this)}
       			addTaskInCategory={this.addTaskInCategory.bind(this)}
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
