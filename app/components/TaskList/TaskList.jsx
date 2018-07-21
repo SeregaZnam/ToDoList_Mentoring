@@ -16,7 +16,7 @@ class TaskList extends Component {
   					taskText={item.taskText}
   					flagChangeTask={item.flagChangeTask}
             show={item.show}
-  					handleCheckedTask={this.props.handleCheckedTask.bind(this)}
+  					handleCheckedTask={this.props.handleCheckedTask}
             handleModalShow={this.props.handleModalShow.bind(this)}
   				/>
   			})

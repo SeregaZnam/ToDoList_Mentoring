@@ -37,7 +37,7 @@ class ModalWindow extends Component {
 	      			id="modal-window__checkbox--label"
 	      			className="modal-window__checkbox"
 	      			checked={this.props.isDoneModal}
-              		onChange={this.props.changeCheckboxDoneModal.bind(this)}
+              onChange={this.props.changeCheckboxDoneModal.bind(this)}
 	      		/>
 	      		<label htmlFor="modal-window__checkbox--label">Is done</label>
       		</div>

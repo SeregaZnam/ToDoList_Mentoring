@@ -25,6 +25,8 @@ class App extends Component {
 			},
 			categoryItems: [
 				{
+					id: 1,
+					parentId: 0,
 					text: 'Category Test 1',
 					checkedCategory: false,
 					flagChangeText: false,
@@ -36,6 +38,8 @@ class App extends Component {
 					]
 				},
 				{
+					id: 1,
+					parentId: 1,
 					text: 'Category Test 1 1',
 					checkedCategory: false,
 					flagChangeText: false,
@@ -47,6 +51,8 @@ class App extends Component {
 					]
 				},
 				{
+					id: 2,
+					parentId: 1,
 					text: 'Category Test 1 2',
 					checkedCategory: false,
 					flagChangeText: false,
@@ -58,6 +64,8 @@ class App extends Component {
 					]
 				},
 				{
+					id: 2,
+					parentId: 0,
 					text: 'Category Test 2',
 					checkedCategory: false,
 					flagChangeText: false,
@@ -69,6 +77,8 @@ class App extends Component {
 					]
 				},
 				{
+					id: 3,
+					parentId: 0,
 					text: 'Category Test 3',
 					checkedCategory: false,
 					flagChangeText: false,
@@ -81,6 +91,10 @@ class App extends Component {
 				}
 			]
 		}
+	}
+
+	filterCategoryItems() {
+		// ..
 	}
 
 	// Change state when entering a value in the input
@@ -476,7 +490,7 @@ class App extends Component {
       		<TasksArea 
       			categoryItems={this.state.categoryItems}
       			disabledTaskInputs={this.state.disabledTaskInputs}
-      			handleCheckedTask={this.handleCheckedTask.bind(this)}
+      			handleCheckedTask={this.handleCheckedTask}
       			addTaskInCategory={this.addTaskInCategory.bind(this)}
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
