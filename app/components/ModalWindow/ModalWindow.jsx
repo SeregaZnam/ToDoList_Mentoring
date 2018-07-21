@@ -79,7 +79,7 @@ ModalWindow.propTypes = {
   isDoneModal: PropTypes.bool,
   saveModalInfo: PropTypes.func.isRequired,
   showModal: PropTypes.bool.isRequired,
-  taskModalSelected: PropTypes.string,
+  taskModalSelected: PropTypes.any,
   textModalTask: PropTypes.string
 };
 

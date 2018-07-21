@@ -1,29 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import TasksInputs from '../TasksInputs/TasksInputs.jsx';
 import TaskList from '../TaskList/TaskList.jsx';
 import './TasksArea.css';
 
-class TasksArea extends Component {
-  render() {
-    return (
-    	<div className="tasks-area">
-      		<TasksInputs 
-            disabledTaskInputs={this.props.disabledTaskInputs}          
-      			addTaskInCategory={this.props.addTaskInCategory.bind(this)}
-      			searchTaskInput={this.props.searchTaskInput.bind(this)}
-      			showDoneTasks={this.props.showDoneTasks.bind(this)}
-      			searchInputDelete={this.props.searchInputDelete.bind(this)}
-      		/>
-      		<TaskList 
-      			categoryItems={this.props.categoryItems}
-      			handleCheckedTask={this.props.handleCheckedTask.bind(this)}
-      			handleModalShow={this.props.handleModalShow.bind(this)}
-      		/>
-    	</div>
-    );
-  }
-}
+const TasksArea = ({ addTaskInCategory, categoryItems, disabledTaskInputs, handleCheckedTask, handleModalShow, searchInputDelete, searchTaskInput, showDoneTasks }) => {
+  return <div className="tasks-area">
+      <TasksInputs 
+        disabledTaskInputs={disabledTaskInputs}          
+        addTaskInCategory={addTaskInCategory}
+        searchTaskInput={searchTaskInput}
+        showDoneTasks={showDoneTasks}
+        searchInputDelete={searchInputDelete}
+      />
+      <TaskList 
+        categoryItems={categoryItems}
+        handleCheckedTask={handleCheckedTask}
+        handleModalShow={handleModalShow}
+      />
+  </div>;
+};
 
 TasksArea.propTypes = {
   addTaskInCategory: PropTypes.func.isRequired,

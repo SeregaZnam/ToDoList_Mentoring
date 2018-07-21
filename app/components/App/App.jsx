@@ -92,8 +92,7 @@ class App extends Component {
 	addCategory(event) {
 		let maxLevelCategory,
 			formControl		   = event.target,
-			inputSearch        = formControl.querySelector('input'),
-			inputSearchTooltip = document.querySelector('.add-note-title__tooltip');
+			inputSearch        = formControl.querySelector('input');
 
 		event.preventDefault();
 

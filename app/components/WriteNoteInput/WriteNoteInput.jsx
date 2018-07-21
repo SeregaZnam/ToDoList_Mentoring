@@ -3,48 +3,46 @@ import PropTypes from 'prop-types';
 import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
 import './WriteNoteInput.css';
 
-class WriteNoteInput extends Component {
-	render() {
-		let formControl, flagDisabled;
+const WriteNoteInput = ({ flagDisabled, inputValue, handleChangeInput, addNote }) => {
+	let formControl;
 
-		flagDisabled = this.props.flagDisabled == undefined ? false : this.props.flagDisabled;
+	flagDisabled = flagDisabled == undefined ? false : flagDisabled;
 
-		if (this.props.inputValue != undefined && this.props.handleChangeInput != undefined) {
-			formControl = <FormControl 
-				value={this.props.inputValue}
-				type="text" 
-				placeholder="Enter category title"
-				onChange={this.props.handleChangeInput.bind(this)}
-			/>;
-		} else {
-			formControl = <FormControl 
-				type="text" 
-				placeholder="Enter task text"
-				disabled={flagDisabled}
-			/>;
-		}
-
-		return <form 
-			className="add-note-title"
-			onSubmit={this.props.addNote.bind(this)}
-			>
-			<FormGroup>
-				<InputGroup>
-					{formControl}
-			    	<InputGroup.Button>
-			        	<Button type="submit" disabled={flagDisabled}>Add</Button>
-			    	</InputGroup.Button>
-				</InputGroup>
-				<Tooltip 
-					placement="bottom" 
-					className="in add-note-title__tooltip" 
-					id="tooltip-bottom"
-				>
-					Fill in the field
-				</Tooltip>
-			</FormGroup>
-		</form>
+	if (inputValue != undefined && handleChangeInput != undefined) {
+		formControl = <FormControl 
+			value={inputValue}
+			type="text" 
+			placeholder="Enter category title"
+			onChange={handleChangeInput}
+		/>;
+	} else {
+		formControl = <FormControl 
+			type="text" 
+			placeholder="Enter task text"
+			disabled={flagDisabled}
+		/>;
 	}
+
+	return <form 
+		className="add-note-title"
+		onSubmit={addNote}
+		>
+		<FormGroup>
+			<InputGroup>
+				{formControl}
+		    	<InputGroup.Button>
+		        	<Button type="submit" disabled={flagDisabled}>Add</Button>
+		    	</InputGroup.Button>
+			</InputGroup>
+			<Tooltip 
+				placement="bottom" 
+				className="in add-note-title__tooltip" 
+				id="tooltip-bottom"
+			>
+				Fill in the field
+			</Tooltip>
+		</FormGroup>
+	</form>;
 }
 
 WriteNoteInput.propTypes = {
