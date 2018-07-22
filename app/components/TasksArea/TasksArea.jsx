@@ -4,7 +4,7 @@ import TasksInputs from '../TasksInputs/TasksInputs.jsx';
 import TaskList from '../TaskList/TaskList.jsx';
 import './TasksArea.css';
 
-const TasksArea = ({ addTaskInCategory, categoryItems, disabledTaskInputs, handleCheckedTask, handleModalShow, searchInputDelete, searchTaskInput, showDoneTasks }) => {
+const TasksArea = ({ addTaskInCategory, categoryItems, disabledTaskInputs, handleCheckedTask, handleModalShow, searchInputDelete, searchTaskInput, showDoneTasks, filterCategoryItems }) => {
   return <div className="tasks-area">
       <TasksInputs 
         disabledTaskInputs={disabledTaskInputs}          
@@ -17,6 +17,7 @@ const TasksArea = ({ addTaskInCategory, categoryItems, disabledTaskInputs, handl
         categoryItems={categoryItems}
         handleCheckedTask={handleCheckedTask}
         handleModalShow={handleModalShow}
+        filterCategoryItems={filterCategoryItems}
       />
   </div>;
 };

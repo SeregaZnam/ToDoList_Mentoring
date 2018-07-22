@@ -24,6 +24,32 @@ class App extends Component {
 				indexTask: null,
 			},
 			categoryItems: [
+			{
+					id: 2,
+					parentId: 1,
+					text: 'Category Test 1 1',
+					checkedCategory: false,
+					flagChangeText: false,
+					levelCategory: [1,1,1],
+					taskList: [
+						{taskText: 'To do item 1 1 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 1 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 1 3', flagChangeTask: false, show: true}
+					]
+				},
+				{
+					id: 3,
+					parentId: 1,
+					text: 'Category Test 1 2',
+					checkedCategory: false,
+					flagChangeText: false,
+					levelCategory: [1,2],
+					taskList: [
+						{taskText: 'To do item 1 2 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2 3', flagChangeTask: false, show: true}
+					]
+				},
 				{
 					id: 1,
 					parentId: 0,
@@ -38,7 +64,7 @@ class App extends Component {
 					]
 				},
 				{
-					id: 1,
+					id: 2,
 					parentId: 1,
 					text: 'Category Test 1 1',
 					checkedCategory: false,
@@ -51,20 +77,7 @@ class App extends Component {
 					]
 				},
 				{
-					id: 2,
-					parentId: 1,
-					text: 'Category Test 1 2',
-					checkedCategory: false,
-					flagChangeText: false,
-					levelCategory: [1,2],
-					taskList: [
-						{taskText: 'To do item 1 2 1', flagChangeTask: true, show: true},
-						{taskText: 'To do item 1 2 2', flagChangeTask: true, show: true},
-						{taskText: 'To do item 1 2 3', flagChangeTask: false, show: true}
-					]
-				},
-				{
-					id: 2,
+					id: 4,
 					parentId: 0,
 					text: 'Category Test 2',
 					checkedCategory: false,
@@ -77,7 +90,7 @@ class App extends Component {
 					]
 				},
 				{
-					id: 3,
+					id: 5,
 					parentId: 0,
 					text: 'Category Test 3',
 					checkedCategory: false,
@@ -91,10 +104,46 @@ class App extends Component {
 				}
 			]
 		}
+		this.filterCategoryItems();
 	}
 
 	filterCategoryItems() {
-		// ..
+		let maxLength = 0,
+			filterCategoryArray = [],
+			filterCategoryItems = [];
+
+		filterCategoryArray = this.state.categoryItems.slice();
+
+		filterCategoryArray = filterCategoryArray.map(item => {
+			if (item.levelCategory.length > maxLength) { 
+				maxLength = item.levelCategory.length;
+			}
+			return item.levelCategory;
+		});
+		
+		filterCategoryArray = filterCategoryArray.map(item => {
+			for (let i = 0; i < maxLength; i++) {
+				if (item[i] == undefined) item[i] = 0;
+			}
+			return item.join('');
+		});
+
+		filterCategoryArray = filterCategoryArray.sort((a, b) => a - b);
+
+		filterCategoryArray = filterCategoryArray.map(item => {
+			item = item.split('');
+			return item;
+		});
+
+		filterCategoryArray.forEach(item => {
+			this.state.categoryItems.forEach(elem => {
+				if (elem.levelCategory.toString() == item.toString()) {
+					filterCategoryItems.push(elem);
+				}
+			});
+		});
+
+		this.state.categoryItems = filterCategoryItems;
 	}
 
 	// Change state when entering a value in the input
@@ -496,6 +545,7 @@ class App extends Component {
       			showDoneTasks={this.showDoneTasks.bind(this)}
       			handleModalShow={this.handleModalShow.bind(this)}
       			searchInputDelete={this.searchInputDelete.bind(this)}
+      			filterCategoryItems={this.filterCategoryItems.bind(this)}
       		/>
       		<ModalWindow 
       			categoryItems={this.state.categoryItems}

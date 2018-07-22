@@ -7,7 +7,8 @@ class CategoryItem extends Component {
     let categoryNode,
         styleSubCategory,
         widthSubCategory,
-        marginLeftSubCategory;
+        marginLeftSubCategory,
+        item;
 
     if (this.props.item.flagChangeText) {
         categoryNode = <form 
@@ -40,8 +41,18 @@ class CategoryItem extends Component {
         </span>;
     }
 
-    if (this.props.item.levelCategory.length > 1) {
-        widthSubCategory = 100 - Number(this.props.item.levelCategory.length) * 5 + '%';
+    // Category alignment
+    item = this.props.item.levelCategory;
+    for (let i = 0; i < this.props.item.levelCategory.length; i++) {
+     if (item[i] == 0) {
+         delete item[i];
+     }
+    }
+    // item.join('').split('') deleting empty from an array
+    item = item.join('').split('');
+
+    if (item.length > 1) {
+        widthSubCategory = 100 - Number(item.length) * 5 + '%';
         marginLeftSubCategory = 100 - parseInt(widthSubCategory) + '%';
 
         styleSubCategory = {
