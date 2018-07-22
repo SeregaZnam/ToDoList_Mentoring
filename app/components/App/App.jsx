@@ -24,39 +24,13 @@ class App extends Component {
 				indexTask: null,
 			},
 			categoryItems: [
-			{
-					id: 2,
-					parentId: 1,
-					text: 'Category Test 1 1',
-					checkedCategory: false,
-					flagChangeText: false,
-					levelCategory: [1,1,1],
-					taskList: [
-						{taskText: 'To do item 1 1 1', flagChangeTask: true, show: true},
-						{taskText: 'To do item 1 1 2', flagChangeTask: true, show: true},
-						{taskText: 'To do item 1 1 3', flagChangeTask: false, show: true}
-					]
-				},
-				{
-					id: 3,
-					parentId: 1,
-					text: 'Category Test 1 2',
-					checkedCategory: false,
-					flagChangeText: false,
-					levelCategory: [1,2],
-					taskList: [
-						{taskText: 'To do item 1 2 1', flagChangeTask: true, show: true},
-						{taskText: 'To do item 1 2 2', flagChangeTask: true, show: true},
-						{taskText: 'To do item 1 2 3', flagChangeTask: false, show: true}
-					]
-				},
 				{
 					id: 1,
 					parentId: 0,
 					text: 'Category Test 1',
 					checkedCategory: false,
 					flagChangeText: false,
-					levelCategory: [1],
+					// levelCategory: [1],
 					taskList: [
 						{taskText: 'To do item 1 1', flagChangeTask: true, show: true},
 						{taskText: 'To do item 1 2', flagChangeTask: true, show: true},
@@ -69,7 +43,7 @@ class App extends Component {
 					text: 'Category Test 1 1',
 					checkedCategory: false,
 					flagChangeText: false,
-					levelCategory: [1,1],
+					// levelCategory: [1,1],
 					taskList: [
 						{taskText: 'To do item 1 1 1', flagChangeTask: true, show: true},
 						{taskText: 'To do item 1 1 2', flagChangeTask: true, show: true},
@@ -78,11 +52,24 @@ class App extends Component {
 				},
 				{
 					id: 4,
+					parentId: 1,
+					text: 'Category Test 1 2',
+					checkedCategory: false,
+					flagChangeText: false,
+					// levelCategory: [1,2],
+					taskList: [
+						{taskText: 'To do item 1 2 1', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2 2', flagChangeTask: true, show: true},
+						{taskText: 'To do item 1 2 3', flagChangeTask: false, show: true}
+					]
+				},
+				{
+					id: 5,
 					parentId: 0,
 					text: 'Category Test 2',
 					checkedCategory: false,
 					flagChangeText: false,
-					levelCategory: [2],
+					// levelCategory: [2],
 					taskList: [
 						{taskText: 'To do item 2 1', flagChangeTask: true, show: true},
 						{taskText: 'To do item 2 2', flagChangeTask: true, show: true},
@@ -90,12 +77,12 @@ class App extends Component {
 					]
 				},
 				{
-					id: 5,
+					id: 6,
 					parentId: 0,
 					text: 'Category Test 3',
 					checkedCategory: false,
 					flagChangeText: false,
-					levelCategory: [3],
+					// levelCategory: [3],
 					taskList: [
 						{taskText: 'To do item 3 1', flagChangeTask: true, show: true},
 						{taskText: 'To do item 3 2', flagChangeTask: true, show: true},
@@ -104,7 +91,37 @@ class App extends Component {
 				}
 			]
 		}
+
+		this.generationLevelCategory();
 		this.filterCategoryItems();
+	}
+
+	generationLevelCategory() {
+		let i = 1;
+
+		this.state.categoryItems.forEach(item => {
+			item.levelCategory = [];
+		})
+
+		this.state.categoryItems.forEach(item => {
+			if (item.parentId == 0) {
+				item.levelCategory.push(i);
+				i++;
+				pushLevelCategory(item.id, this.state.categoryItems, item.levelCategory);
+			}
+		})
+
+		function pushLevelCategory(id, categoryItems, levelCategory) {
+			let j = 1;
+			categoryItems.forEach(item => {
+				if (id == item.parentId) {
+					item.levelCategory = levelCategory.slice();
+					item.levelCategory.push(j);
+					j++;
+					pushLevelCategory(item.id, categoryItems, item.levelCategory);
+				}
+			});
+		}
 	}
 
 	filterCategoryItems() {
@@ -153,7 +170,8 @@ class App extends Component {
 
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
-		let maxLevelCategory,
+		let maxIdCategory = 0,
+			maxLevelCategory,
 			formControl		   = event.target,
 			inputSearch        = formControl.querySelector('input');
 
@@ -163,11 +181,16 @@ class App extends Component {
 			inputSearch.style.backgroundColor = 'white';
 
 			maxLevelCategory = this.state.categoryItems.map((item) => {
+				if (maxIdCategory < item.id) {
+					maxIdCategory = item.id;
+				}
 				return item.levelCategory[0];
 			});
 			maxLevelCategory = Math.max(...maxLevelCategory) + 1;
 
 			this.state.categoryItems.push({ 
+				id: maxIdCategory + 1,
+				parentId: 0,
 				text: this.state.inputValue, 
 				checkedCategory: false,
 				flagChangeText: false,
@@ -480,13 +503,18 @@ class App extends Component {
 	/* SubCategory function */
 	/************************/
 
-	addSubCategoryItem(levelCategory, index) {
+	addSubCategoryItem(levelCategory, parentId, index) {
 		let lengthNextLevel = levelCategory.length + 1,
 			lastNumberLevel = 0,
-			newNumberLevel  = [];
+			newNumberLevel  = [],
+			maxIdCategory = 0;
 
 		// Generation of a level number
 		this.state.categoryItems.forEach((item) => {
+			if (maxIdCategory < item.id) {
+				maxIdCategory = item.id;
+			}
+
 			if (item.levelCategory.length == lengthNextLevel && levelCategory != item.levelCategory) {
 				lastNumberLevel < item.levelCategory[item.levelCategory.length - 1] ?
 					lastNumberLevel = item.levelCategory[item.levelCategory.length - 1] : 
@@ -511,6 +539,8 @@ class App extends Component {
 		}
 
 		this.state.categoryItems.splice(index + 1, 0, {
+			id: maxIdCategory + 1,
+			parentId: parentId,
 			text: '',
 			checkedCategory: false,
 			flagChangeText: true,
