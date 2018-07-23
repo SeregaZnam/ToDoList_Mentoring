@@ -1,19 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { handleChangeInputRedux } from '../../actions/index';
 import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
 import './WriteNoteInput.css';
 
-const WriteNoteInput = ({ flagDisabled, inputValue, handleChangeInput, addNote }) => {
+const WriteNoteInput = ({ flagDisabled, inputValue, handleChangeInput, addNote, inputValueRedux, handleChangeInputRedux }) => {
 	let formControl;
 
 	flagDisabled = flagDisabled == undefined ? false : flagDisabled;
 
 	if (inputValue != undefined && handleChangeInput != undefined) {
 		formControl = <FormControl 
-			value={inputValue}
+			value={inputValueRedux}
 			type="text" 
 			placeholder="Enter category title"
-			onChange={handleChangeInput}
+			onChange={(event) => {
+				handleChangeInputRedux(event.target.value);
+			}}
 		/>;
 	} else {
 		formControl = <FormControl 
@@ -52,4 +57,17 @@ WriteNoteInput.propTypes = {
 	flagDisabled: PropTypes.bool
 };
 
-export default WriteNoteInput;
+
+const mapStateToProps = (state) => {
+	return {
+		inputValueRedux: state.inputValue
+	}
+}
+
+const mapActionsToProps = (dispatch) => {
+	return {
+		handleChangeInputRedux: bindActionCreators(handleChangeInputRedux, dispatch)
+	};
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(WriteNoteInput);
