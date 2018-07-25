@@ -4,11 +4,14 @@ import WriteNoteInput from '../WriteNoteInput/WriteNoteInput.jsx';
 import './AddCategoryTitle.css';
 
 const AddCategoryTitle = ({ inputValue, addCategory, handleChangeInput }) => {
+  let flagAddCategory = true;
+
   return <div className="add-category-title">
     <WriteNoteInput 
       inputValue={inputValue}
       addNote={addCategory}
-      handleChangeInput={handleChangeInput}
+      flagAddCategory={flagAddCategory}
+      // handleChangeInput={handleChangeInput}
     />
   </div>;
 };
@@ -16,7 +19,7 @@ const AddCategoryTitle = ({ inputValue, addCategory, handleChangeInput }) => {
 AddCategoryTitle.propTypes = {
 	inputValue: PropTypes.string,
 	addCategory: PropTypes.func.isRequired,
-	handleChangeInput: PropTypes.func.isRequired
+	// handleChangeInput: PropTypes.func.isRequired
 };
 
 export default AddCategoryTitle;

@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App/App.jsx';
 import registerServiceWorker from './registerServiceWorker';
-import { createStore, combineReducers } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import todoApp from './reducers/index.js';
 
-const store = createStore(todoApp, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
-
-console.log(store.getState());
+const store = createStore(todoApp, composeWithDevTools(applyMiddleware(thunk)));
 
 ReactDOM.render(
 	<Provider store={store}>

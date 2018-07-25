@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux } from '../../actions/index';
 import State from '../../stateApp';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
@@ -16,39 +19,43 @@ class App extends Component {
 	}
 
 	generationLevelCategory() {
+		let { categoryItemsRedux, generationLevelCategoryRedux } = this.props;
 		let i = 1;
 
-		this.state.categoryItems.forEach(item => {
+		categoryItemsRedux.forEach(item => {
 			item.levelCategory = [];
 		})
 
-		this.state.categoryItems.forEach(item => {
+		categoryItemsRedux.forEach(item => {
 			if (item.parentId == 0) {
 				item.levelCategory.push(i);
 				i++;
-				pushLevelCategory(item.id, this.state.categoryItems, item.levelCategory);
+				pushLevelCategory(item.id, categoryItemsRedux, item.levelCategory);
 			}
 		})
 
-		function pushLevelCategory(id, categoryItems, levelCategory) {
+		generationLevelCategoryRedux(categoryItemsRedux);
+
+		function pushLevelCategory(id, categoryItemsRedux, levelCategory) {
 			let j = 1;
-			categoryItems.forEach(item => {
+			categoryItemsRedux.forEach(item => {
 				if (id == item.parentId) {
 					item.levelCategory = levelCategory.slice();
 					item.levelCategory.push(j);
 					j++;
-					pushLevelCategory(item.id, categoryItems, item.levelCategory);
+					pushLevelCategory(item.id, categoryItemsRedux, item.levelCategory);
 				}
 			});
 		}
 	}
 
 	filterCategoryItems() {
+		let { categoryItemsRedux } = this.props;
 		let maxLength = 0,
 			filterCategoryArray = [],
 			filterCategoryItems = [];
 
-		filterCategoryArray = this.state.categoryItems.slice();
+		filterCategoryArray = categoryItemsRedux.slice();
 
 		filterCategoryArray = filterCategoryArray.map(item => {
 			if (item.levelCategory.length > maxLength) { 
@@ -72,34 +79,36 @@ class App extends Component {
 		});
 
 		filterCategoryArray.forEach(item => {
-			this.state.categoryItems.forEach(elem => {
+			categoryItemsRedux.forEach(elem => {
 				if (elem.levelCategory.toString() == item.toString()) {
 					filterCategoryItems.push(elem);
 				}
 			});
 		});
 
-		this.state.categoryItems = filterCategoryItems;
+		categoryItemsRedux = filterCategoryItems;
 	}
 
 	// Change state when entering a value in the input
-	handleChangeInput(event) {
-		this.setState({ inputValue: event.target.value });
-	}
+	// handleChangeInput(event) {
+	// 	this.setState({ inputValue: event.target.value });
+	// }
 
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
+		let { inputValueRedux, categoryItemsRedux, addCategoryItemRedux } = this.props;
 		let maxIdCategory = 0,
 			maxLevelCategory,
 			formControl		   = event.target,
-			inputSearch        = formControl.querySelector('input');
+			inputSearch        = formControl.querySelector('input'),
+			newCategoryItem;
 
 		event.preventDefault();
 
 		if (inputSearch.value) {
 			inputSearch.style.backgroundColor = 'white';
 
-			maxLevelCategory = this.state.categoryItems.map((item) => {
+			maxLevelCategory = categoryItemsRedux.map((item) => {
 				if (maxIdCategory < item.id) {
 					maxIdCategory = item.id;
 				}
@@ -107,19 +116,18 @@ class App extends Component {
 			});
 			maxLevelCategory = Math.max(...maxLevelCategory) + 1;
 
-			this.state.categoryItems.push({ 
+			newCategoryItem = { 
 				id: maxIdCategory + 1,
 				parentId: 0,
-				text: this.state.inputValue, 
+				text: inputValueRedux, 
 				checkedCategory: false,
 				flagChangeText: false,
 				levelCategory: [maxLevelCategory],
 				taskList: []
-			});
-			this.setState({
-				inputValue: '',
-				categoryItems: this.state.categoryItems
-			});
+			};
+
+			addCategoryItemRedux(newCategoryItem); 
+
 		} else {
 			formControl.classList.add('error');
 
@@ -131,41 +139,17 @@ class App extends Component {
 
 	// Deleting category item
 	deleteCategoryItem(levelCategory, index) {
-		let categoryItems = this.state.categoryItems;
-		let indices       = [];
+		let { categoryItemsRedux, deleteCategoryItemRedux } = this.props;
+		let categoryItems = this.state.categoryItems,
+			indices       = [];
 
-		for (let i = 0; i < categoryItems.length; i++) {
-			if (categoryItems[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
+		for (let i = 0; i < categoryItemsRedux.length; i++) {
+			if (categoryItemsRedux[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
 				indices.push(i);
 			}
 		}
 
-		this.state.categoryItems.splice(index, indices.length);
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
-	// Change category text
-	changeCategoryText(index) {
-		this.state.categoryItems[index].flagChangeText = !this.state.categoryItems[index].flagChangeText;
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
-	// Change category text when submiting
-	submitCategoryInput(event) {
-		let index = event.target.children[0].dataset.index;
-
-		event.preventDefault();
-		this.state.categoryItems[index].text = event.target.children[0].value;
-		this.state.categoryItems[index].flagChangeText = !this.state.categoryItems[index].flagChangeText;
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
-	// Changing text in a state when typing
-	changeInputCategoryItem(event) {
-		let index = event.target.dataset.index;
-
-		this.state.categoryItems[index].text = event.target.value;
-		this.setState({ categoryItems: this.state.categoryItems });
+		deleteCategoryItemRedux(index, indices.length);
 	}
 
 	// Show and hide tasks when clicking on a category
@@ -423,13 +407,15 @@ class App extends Component {
 	/************************/
 
 	addSubCategoryItem(levelCategory, parentId, index) {
+		let { categoryItemsRedux, addSubCategoryItemRedux } = this.props;
 		let lengthNextLevel = levelCategory.length + 1,
 			lastNumberLevel = 0,
 			newNumberLevel  = [],
-			maxIdCategory = 0;
+			maxIdCategory = 0,
+			newSubCategoryItem;
 
 		// Generation of a level number
-		this.state.categoryItems.forEach((item) => {
+		categoryItemsRedux.forEach((item) => {
 			if (maxIdCategory < item.id) {
 				maxIdCategory = item.id;
 			}
@@ -457,7 +443,7 @@ class App extends Component {
 			}
 		}
 
-		this.state.categoryItems.splice(index + 1, 0, {
+		newSubCategoryItem = {
 			id: maxIdCategory + 1,
 			parentId: parentId,
 			text: '',
@@ -465,9 +451,9 @@ class App extends Component {
 			flagChangeText: true,
 			levelCategory: newNumberLevel,
 			taskList: []
-		});
+		};
 
-		this.setState({ categoryItems: this.state.categoryItems });
+		addSubCategoryItemRedux(index, newSubCategoryItem);
 	}
 
   render() {
@@ -477,12 +463,8 @@ class App extends Component {
       			categoryItems={this.state.categoryItems} 
       			inputValue={this.state.inputValue}
       			addCategory={this.addCategory.bind(this)}
-    			handleChangeInput={this.handleChangeInput.bind(this)}
     			deleteCategoryItem={this.deleteCategoryItem.bind(this)}
-    			changeCategoryText={this.changeCategoryText.bind(this)}
     			toggleShowTasks={this.toggleShowTasks.bind(this)}
-    			submitCategoryInput={this.submitCategoryInput.bind(this)}
-    			changeInputCategoryItem={this.changeInputCategoryItem.bind(this)}
     			addSubCategoryItem={this.addSubCategoryItem.bind(this)}
       		/>
       		<TasksArea 
@@ -515,4 +497,21 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		inputValueRedux: state.categoryTitle.inputValueRedux,
+		categoryItemsRedux: state.categoryTitle.categoryItemsRedux
+	}
+}
+
+const mapActionsToProps = (dispatch) => {
+	return {
+		handleChangeInputRedux: bindActionCreators(handleChangeInputRedux, dispatch),
+		addCategoryItemRedux: bindActionCreators(addCategoryItemRedux, dispatch),
+		deleteCategoryItemRedux: bindActionCreators(deleteCategoryItemRedux, dispatch),
+		addSubCategoryItemRedux: bindActionCreators(addSubCategoryItemRedux, dispatch),
+		generationLevelCategoryRedux: bindActionCreators(generationLevelCategoryRedux, dispatch)
+	};
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(App);

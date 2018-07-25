@@ -1,66 +1,75 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { handleChangeInputRedux } from '../../actions/index';
+import { handleChangeInputRedux } from '../../actions/index.js';
 import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-bootstrap';
 import './WriteNoteInput.css';
 
-const WriteNoteInput = ({ flagDisabled, inputValue, handleChangeInput, addNote, inputValueRedux, handleChangeInputRedux }) => {
-	let formControl;
+class WriteNoteInput extends Component {
+	render() {
+		let { categoryText, flagAddCategory, flagDisabled, addNote, inputValueRedux, handleChangeInputRedux } = this.props;
+		let formControl;
 
-	flagDisabled = flagDisabled == undefined ? false : flagDisabled;
+		flagDisabled = flagDisabled == undefined ? false : flagDisabled;
+		if (flagAddCategory) {
+			formControl = <FormControl 
+				value={inputValueRedux}
+				type="text" 
+				placeholder="Enter category title"
+				onChange={(event) => {
+					handleChangeInputRedux(event.target.value);
+				}}
+			/>;
+		} else {
+			formControl = <FormControl 
+				type="text" 
+				placeholder="Enter task text"
+				disabled={flagDisabled}
+			/>;
+		}
 
-	if (inputValue != undefined && handleChangeInput != undefined) {
-		formControl = <FormControl 
-			value={inputValueRedux}
-			type="text" 
-			placeholder="Enter category title"
-			onChange={(event) => {
-				handleChangeInputRedux(event.target.value);
-			}}
-		/>;
-	} else {
-		formControl = <FormControl 
-			type="text" 
-			placeholder="Enter task text"
-			disabled={flagDisabled}
-		/>;
-	}
-
-	return <form 
-		className="add-note-title"
-		onSubmit={addNote}
-		>
-		<FormGroup>
-			<InputGroup>
-				{formControl}
-		    	<InputGroup.Button>
-		        	<Button type="submit" disabled={flagDisabled}>Add</Button>
-		    	</InputGroup.Button>
-			</InputGroup>
-			<Tooltip 
-				placement="bottom" 
-				className="in add-note-title__tooltip" 
-				id="tooltip-bottom"
+		return <form 
+			className="add-note-title"
+			onSubmit={addNote}
 			>
-				Fill in the field
-			</Tooltip>
-		</FormGroup>
-	</form>;
+			<FormGroup>
+				<InputGroup>
+					{formControl}
+			    	<InputGroup.Button>
+			        	<Button 
+			        		type="submit" 
+			        		disabled={flagDisabled}
+			        	>
+			        		Add
+			        	</Button>
+			    	</InputGroup.Button>
+				</InputGroup>
+				<Tooltip 
+					placement="bottom" 
+					className="in add-note-title__tooltip" 
+					id="tooltip-bottom"
+				>
+					Fill in the field
+				</Tooltip>
+			</FormGroup>
+		</form>;
+	}
 }
+
+
 
 WriteNoteInput.propTypes = {
 	addNote: PropTypes.func.isRequired,
-	inputValue: PropTypes.string,
-	handleChangeInput: PropTypes.func,
+	inputValueRedux: PropTypes.string,
+	handleChangeInputRedux: PropTypes.func,
 	flagDisabled: PropTypes.bool
 };
 
 
 const mapStateToProps = (state) => {
 	return {
-		inputValueRedux: state.inputValue
+		inputValueRedux: state.categoryTitle.inputValueRedux
 	}
 }
 
