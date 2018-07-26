@@ -39,7 +39,7 @@ TasksInputs.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    disabledTaskInputsRedux: state.taskTitle.disabledTaskInputsRedux
+    disabledTaskInputsRedux: state.categoryTitle.disabledTaskInputsRedux
   }
 }
 

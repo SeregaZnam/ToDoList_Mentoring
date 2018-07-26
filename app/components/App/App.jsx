@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs } from '../../actions/index';
+import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs, addTaskInCategoryRedux, hideTasksCompletedInputSearch, showTasksRedux } from '../../actions/index';
 import State from '../../stateApp';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
@@ -164,35 +164,27 @@ class App extends Component {
 		changeDisabledTaskInputs(!attributeDisabled);
 	}
 
-	// Change checked checkbox task 
-	handleCheckedTask(event) {
-		let indexTask     = event.target.dataset.index,
-			indexCategory = event.target.dataset.category;
-
-		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = !this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask;
-		this.setState({ categoryItems: this.state.categoryItems });
-	}
-
 	// Add a task to the category
 	addTaskInCategory(event) {
-		let elemEvent			= event.target,
-			addTaskInput 	    = elemEvent.querySelector('input'),
-			addTaskInputTooltip = elemEvent.querySelector('.tasks-inputs__title__tooltip');
+		let { categoryItemsRedux, addTaskInCategoryRedux } = this.props;
+		let elemEvent    = event.target,
+			addTaskInput = elemEvent.querySelector('input'),
+			newTask;
 
 		event.preventDefault();
 
 		if (addTaskInput.value) {
-			this.state.categoryItems.forEach((item) => {
+			categoryItemsRedux.forEach((item, index) => {
 				if (item.checkedCategory) {
-					item.taskList.push({
+					newTask = {
 						taskText: addTaskInput.value, 
 						flagChangeTask: false, 
 						show: true
-					});
+					};
+					addTaskInCategoryRedux(newTask, index);
 					return;
 				}
 			})
-			this.setState({ categoryItems: this.state.categoryItems });
 			addTaskInput.value = '';
 		} else {
 			elemEvent.classList.add('error');
@@ -205,126 +197,141 @@ class App extends Component {
 
 	// Search Task
 	searchTaskInput(event) {
-		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox');
+		let { categoryItemsRedux, hideTasksCompletedInputSearch, showTasksRedux } = this.props;
+		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox'),
+			flagShow;
 
 		// Hide tasks with a completed input search
 		if (event.target.value) {
-			this.state.categoryItems.forEach((item) => {
-				item.taskList.forEach((item) => {
-					item.show = false;
-				})
-			});
+			flagShow = false;
+			hideTasksCompletedInputSearch(flagShow);
 		} else {
 			if (showDoneCheckbox.checked) {
-				this.state.categoryItems.forEach((item) => {
-					item.taskList.forEach((item) => {
-						item.flagChangeTask ? 
-							item.show = true :
-							item.show = false;
+				categoryItemsRedux.forEach((item, indexCategory) => {
+					item.taskList.forEach((item, indexTask) => {
+						if (item.flagChangeTask) {
+							flagShow = true;
+							showTasksRedux(flagShow, indexCategory, indexTask);
+						} else {
+							flagShow = false;
+							showTasksRedux(flagShow, indexCategory, indexTask);
+						}
 					})
 				});
 			} else {
-				this.state.categoryItems.forEach((item) => {
-					item.taskList.forEach((item) => {
-						item.show = true;
-					})
-				});
+				flagShow = true;
+				hideTasksCompletedInputSearch(flagShow);
 			}
 		}
 
-		// Show test a searchable match
-		this.state.categoryItems.forEach((item, indexCategory) => {
+		// Show task a searchable match
+		categoryItemsRedux.forEach((item, indexCategory) => {
 			if (item.checkedCategory) {
 				if (showDoneCheckbox.checked) {
 					item.taskList.forEach((elem, indexTask) => {
 						if (elem.taskText.toLowerCase().indexOf(event.target.value) >= 0 && elem.flagChangeTask) {
-							elem.show = true;
+							flagShow = true;
+							showTasksRedux(flagShow, indexCategory, indexTask);
 						}
 					})
 				} else {
 					item.taskList.forEach((elem, indexTask) => {
 						if (elem.taskText.toLowerCase().indexOf(event.target.value.toLowerCase()) >= 0) {
-							elem.show = true;
+							flagShow = true;
+							showTasksRedux(flagShow, indexCategory, indexTask);
 						}
 					})
 				}
 			}
 		})
-		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
 	searchInputDelete(event) {
-		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox');
+		let { categoryItemsRedux, showTasksRedux, hideTasksCompletedInputSearch } = this.props;
+		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox'),
+			flagShow;
 
 		event.target.previousElementSibling.value = '';
 
 		if (showDoneCheckbox.checked) {
-			this.state.categoryItems.forEach((item) => {
-				item.taskList.forEach((item) => {
+			categoryItemsRedux.forEach((item, indexCategory) => {
+				item.taskList.forEach((item, indexTask) => {
 					if (item.flagChangeTask) {
-						item.show = true;
+						flagShow = true;
+						showTasksRedux(flagShow, indexCategory, indexTask);
 					}
 				})
 			});
 		} else {
-			this.state.categoryItems.forEach((item) => {
+			categoryItemsRedux.forEach((item) => {
 				item.taskList.forEach((item) => {
-					item.show = true;
+					flagShow = true;
+					hideTasksCompletedInputSearch(flagShow);
 				})
 			});
 		}
-		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
 	// Show done tasks
 	showDoneTasks(event) {
-		let inputSearch = document.querySelector('.tasks-inputs__search input');
+		let { categoryItemsRedux, showTasksRedux, hideTasksCompletedInputSearch } = this.props;
+		let inputSearch = document.querySelector('.tasks-inputs__search input'),
+			flagShow;
 
 		if (event.target.checked) {
-			this.state.categoryItems.forEach((item) => {
+			categoryItemsRedux.forEach((item, indexCategory) => {
 				if (inputSearch.value) {
-					item.taskList.forEach((item) => {
-						item.flagChangeTask && item.show ? 
-							item.show = true : 
-							item.show = false;
+					item.taskList.forEach((item, indexTask) => {
+						if (item.flagChangeTask && item.show) { 
+							flagShow = true;
+							showTasksRedux(flagShow, indexCategory, indexTask);
+						} else {
+							flagShow = false;
+							showTasksRedux(flagShow, indexCategory, indexTask);
+						}
 					})	
 				} else {
-					item.taskList.forEach((item) => {
-						item.flagChangeTask ?
-							item.show = true :
-							item.show = false;
+					item.taskList.forEach((item, indexTask) => {
+						if (item.flagChangeTask) {
+							flagShow = true;
+							showTasksRedux(flagShow, indexCategory, indexTask);
+						} else {
+							flagShow = false;
+							showTasksRedux(flagShow, indexCategory, indexTask);
+						}
 					})
 				}
 			});
 		} else {
 			if (inputSearch.value) {
-				this.state.categoryItems.forEach((item) => {
-					item.taskList.forEach((item) => {
+				categoryItemsRedux.forEach((item, indexCategory) => {
+					item.taskList.forEach((item, indexTask) => {
 						if (item.taskText.toLowerCase().indexOf(inputSearch.value.toLowerCase()) >= 0) {
-							item.show = true;
+							flagShow = true;
+							showTasksRedux(flagShow, indexCategory, indexTask);
 						}
 					})
 				})
 			} else {
-				this.state.categoryItems.forEach((item) => {
+				categoryItemsRedux.forEach((item) => {
 					item.taskList.forEach((item) => {
-						item.show = true;
+						flagShow = true;
+						hideTasksCompletedInputSearch(flagShow);
 					})
 				});
 			}
 		}
-		this.setState({ categoryItems: this.state.categoryItems });
 	}
 
 	/*******************/
 	/* Modal functions */
 	/*******************/
 
-	handleModalClose() {
-		this.setState({ showModal: false });
-	}
+	// handleModalClose() {
+	// 	this.setState({ showModal: false });
+	// }
 
-	handleModalShow(event) {
+/*	handleModalShow(event) {
 		let eventElement  = event.target.previousElementSibling.previousElementSibling,
 			indexCategory = eventElement.dataset.category,
 			indexTask     = eventElement.dataset.index;
@@ -348,9 +355,9 @@ class App extends Component {
 		});
 	
 		this.setState({ showModal: true });
-	}
+	}*/
 
-	saveModalInfo(modalText, modalChecked) {
+	/*saveModalInfo(modalText, modalChecked) {
 		let indexCategory 		  = this.state.indexModalCategory,
 			indexTask     		  = this.state.indexTask,
 			indexModalCategory 	  = this.state.indexModalCategory,
@@ -372,15 +379,15 @@ class App extends Component {
 			showModal: false,
 			categoryItems: this.state.categoryItems
 		});
-	}
+	}*/
 
-	changeTextModalTask(event) {
+	/*changeTextModalTask(event) {
 		this.setState({ textModalTask: event.target.value });
-	}
+	}*/
 
-	changeCheckboxDoneModal() {
-		this.setState({ isDoneModal: !this.state.isDoneModal });
-	}
+	// changeCheckboxDoneModal() {
+	// 	this.setState({ isDoneModal: !this.state.isDoneModal });
+	// }
 
 	changeValueSelectModal(event) {
 		let indexCategory = event.target.dataset.indexcategory,
@@ -464,11 +471,9 @@ class App extends Component {
       		<TasksArea 
       			categoryItems={this.state.categoryItems}
       			disabledTaskInputs={this.state.disabledTaskInputs}
-      			handleCheckedTask={this.handleCheckedTask.bind(this)}
       			addTaskInCategory={this.addTaskInCategory.bind(this)}
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
-      			handleModalShow={this.handleModalShow.bind(this)}
       			searchInputDelete={this.searchInputDelete.bind(this)}
       			filterCategoryItems={this.filterCategoryItems.bind(this)}
       		/>
@@ -480,10 +485,9 @@ class App extends Component {
       			indexModalCategory={this.state.indexModalCategory}
       			indexModalTask={this.state.indexModalTask}
       			taskModalSelected={this.state.taskModalSelected}
-      			handleModalClose={this.handleModalClose.bind(this)}
-      			saveModalInfo={this.saveModalInfo.bind(this)}
-      			changeTextModalTask={this.changeTextModalTask.bind(this)}
-      			changeCheckboxDoneModal={this.changeCheckboxDoneModal.bind(this)}
+      			// saveModalInfo={this.saveModalInfo.bind(this)}
+      			// changeTextModalTask={this.changeTextModalTask.bind(this)}
+      			// changeCheckboxDoneModal={this.changeCheckboxDoneModal.bind(this)}
       			changeValueSelectModal={this.changeValueSelectModal.bind(this)}
       		/>
       	</div>
@@ -495,7 +499,7 @@ const mapStateToProps = (state) => {
 	return {
 		inputValueRedux: state.categoryTitle.inputValueRedux,
 		categoryItemsRedux: state.categoryTitle.categoryItemsRedux,
-		disabledTaskInputsRedux: state.taskTitle.disabledTaskInputsRedux
+		disabledTaskInputsRedux: state.categoryTitle.disabledTaskInputsRedux
 	}
 }
 
@@ -507,7 +511,10 @@ const mapActionsToProps = (dispatch) => {
 		addSubCategoryItemRedux: bindActionCreators(addSubCategoryItemRedux, dispatch),
 		generationLevelCategoryRedux: bindActionCreators(generationLevelCategoryRedux, dispatch),
 		changeCheckedCategoryRedux: bindActionCreators(changeCheckedCategoryRedux, dispatch),
-		changeDisabledTaskInputs: bindActionCreators(changeDisabledTaskInputs, dispatch)
+		changeDisabledTaskInputs: bindActionCreators(changeDisabledTaskInputs, dispatch),
+		addTaskInCategoryRedux: bindActionCreators(addTaskInCategoryRedux, dispatch),
+		hideTasksCompletedInputSearch: bindActionCreators(hideTasksCompletedInputSearch, dispatch),
+		showTasksRedux: bindActionCreators(showTasksRedux, dispatch)
 	};
 }
 

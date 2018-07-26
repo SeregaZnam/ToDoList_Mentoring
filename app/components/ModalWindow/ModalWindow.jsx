@@ -1,43 +1,51 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { handleModalCloseRedux, saveModalInfoRedux, changeTextModalTaskRedux, changeCheckboxDoneModalRedux, changeValueSelectModalRedux } from '../../actions/index';
 import { Modal, Button, FormControl, FormGroup } from 'react-bootstrap';
 import './ModalWindow.css';
 
 class ModalWindow extends Component {
   render() {
+    let { textModalTaskRedux, isDoneModalRedux, indexModalTaskRedux, indexModalCategoryRedux, showModalRedux, categoryItemsRedux, handleModalCloseRedux, saveModalInfoRedux, changeTextModalTaskRedux, changeCheckboxDoneModalRedux, changeValueSelectModalRedux } = this.props;
   	let defaultValueSelect,
-  		optionsValue;
+  		  optionsValue;
   	
-  	optionsValue = this.props.categoryItems.map((item, index) => {
+  	optionsValue = categoryItemsRedux.map((item, index) => {
   		return <option key={index} value={index} data-index={index}>
   			{item.text}
   		</option>;
   	});
 
-  	if (this.props.showModal) {
+  	if (showModalRedux) {
   		defaultValueSelect = this.props.taskModalSelected;
   	}
 
     return (
       <div className="modal-window">
-        <Modal show={this.props.showModal} onHide={this.props.handleModalClose.bind(this)}>
+        <Modal show={showModalRedux} onHide={() => { handleModalCloseRedux(); }}>
           <Modal.Header closeButton>
             <Modal.Title>Task</Modal.Title>
           </Modal.Header>
           <Modal.Body>
           	<FormControl
 	            type="text"
-	            value={this.props.textModalTask}
+	            value={textModalTaskRedux}
 	            placeholder="Enter text"
-	            onChange={this.props.changeTextModalTask.bind(this)}
+	            onChange={(event) => {
+                changeTextModalTaskRedux(event.target.value);
+              }}
 	        />
 	        <div className="modal-window__done">
 	      		<input 
 	      			type="checkbox" 
 	      			id="modal-window__checkbox--label"
 	      			className="modal-window__checkbox"
-	      			checked={this.props.isDoneModal}
-              onChange={this.props.changeCheckboxDoneModal.bind(this)}
+	      			checked={isDoneModalRedux}
+              onChange={() => {
+                changeCheckboxDoneModalRedux();
+              }}
 	      		/>
 	      		<label htmlFor="modal-window__checkbox--label">Is done</label>
       		</div>
@@ -45,9 +53,13 @@ class ModalWindow extends Component {
 		      <FormControl 
 		      	componentClass="select"
 		      	value={defaultValueSelect}
-		      	data-indexcategory={this.props.indexModalCategory}
-		      	data-indextask={this.props.indexModalTask}
-		      	onChange={this.props.changeValueSelectModal.bind(this)}
+		      	data-indexcategory={indexModalCategoryRedux}
+		      	data-indextask={indexModalTaskRedux}
+		      	onChange={(event) => {
+              let indexCategory = event.target.dataset.indexcategory,
+                  indexTask     = event.target.dataset.indextask;
+              changeValueSelectModalRedux(indexCategory, indexTask);
+            }}
 		      >
 		      	{optionsValue}
 		      </FormControl>
@@ -56,7 +68,12 @@ class ModalWindow extends Component {
           <Modal.Footer>
             <Button 
 	            className="data-indices" 
-	            onClick={this.props.saveModalInfo.bind(null, this.props.textModalTask, this.props.isDoneModal)}>Save</Button>
+	            onClick={() => {
+                saveModalInfoRedux(textModalTaskRedux, isDoneModalRedux)
+              }}
+            >
+              Save
+            </Button>
           </Modal.Footer>
         </Modal>
       </div>
@@ -71,16 +88,37 @@ ModalWindow.propTypes = {
     })
   ),
   changeCheckboxDoneModal: PropTypes.func.isRequired,
-  changeTextModalTask: PropTypes.func.isRequired,
+  changeTextModalTaskRedux: PropTypes.func.isRequired,
   changeValueSelectModal: PropTypes.func.isRequired,
-  handleModalClose: PropTypes.func.isRequired,
-  indexModalCategory: PropTypes.string,
-  indexModalTask: PropTypes.string,
-  isDoneModal: PropTypes.bool,
-  saveModalInfo: PropTypes.func.isRequired,
+  handleModalCloseRedux: PropTypes.func.isRequired,
+  indexModalCategoryRedux: PropTypes.string,
+  indexModalTaskRedux: PropTypes.string,
+  isDoneModalRedux: PropTypes.bool,
+  saveModalInfoRedux: PropTypes.func.isRequired,
   showModal: PropTypes.bool.isRequired,
   taskModalSelected: PropTypes.any,
-  textModalTask: PropTypes.string
+  textModalTaskRedux: PropTypes.string
 };
 
-export default ModalWindow;
+const mapStateToProps = (state) => {
+  return {
+    showModalRedux: state.categoryTitle.showModalRedux,
+    categoryItemsRedux: state.categoryTitle.categoryItemsRedux,
+    textModalTaskRedux: state.categoryTitle.textModalTaskRedux,
+    isDoneModalRedux: state.categoryTitle.isDoneModalRedux,
+    indexModalCategoryRedux: state.categoryTitle.indexModalCategoryRedux,
+    indexModalTaskRedux: state.categoryTitle.indexModalTaskRedux
+  }
+}
+
+const mapActionsToProps = (dispatch) => {
+  return {
+    handleModalCloseRedux: bindActionCreators(handleModalCloseRedux, dispatch),
+    saveModalInfoRedux: bindActionCreators(saveModalInfoRedux, dispatch),
+    changeTextModalTaskRedux: bindActionCreators(changeTextModalTaskRedux, dispatch),
+    changeCheckboxDoneModalRedux: bindActionCreators(changeCheckboxDoneModalRedux, dispatch),
+    changeValueSelectModalRedux: bindActionCreators(changeValueSelectModalRedux, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(ModalWindow);

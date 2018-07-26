@@ -13,14 +13,11 @@ class TaskList extends Component {
       let tasks;
   		if (item.checkedCategory) {
   			  tasks = item.taskList.map((item, indexTasks) => {
-            console.log(item);
   				return <TaskItem 
   					key={indexTasks}
             item={item}
   					indexTasks={indexTasks}
   					indexCategory={indexCategory}
-  					handleCheckedTask={this.props.handleCheckedTask}
-            handleModalShow={this.props.handleModalShow.bind(this)}
   				/>
   			})
   			return tasks;
@@ -43,8 +40,6 @@ TaskList.propTypes = {
       show: PropTypes.bool
     })
   ),
-  handleCheckedTask: PropTypes.func.isRequired,
-  handleModalShow: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
