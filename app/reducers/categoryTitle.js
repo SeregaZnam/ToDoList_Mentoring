@@ -1,4 +1,4 @@
-import { CHANGE_INPUT_VALUE_CATEGORY_TITLE, ADD_CATEGORY_ITEM, DELETE_CATEGORY_ITEM, CHANGE_CATEGORY_TEXT, SUBMIT_CATEGORY_INPUT, CHANGE_INPUT_CATEGORY_ITEM, ADD_SUBCATEGORY_ITEM, GENERATION_LEVEL_CATEGORY } from '../constants/index.js';
+import { CHANGE_INPUT_VALUE_CATEGORY_TITLE, ADD_CATEGORY_ITEM, DELETE_CATEGORY_ITEM, CHANGE_CATEGORY_TEXT, SUBMIT_CATEGORY_INPUT, CHANGE_INPUT_CATEGORY_ITEM, ADD_SUBCATEGORY_ITEM, GENERATION_LEVEL_CATEGORY, CHANGE_CHECKED_CATEGORY } from '../constants/index.js';
 import { initialState } from '../store/initialState';
 
 const categoryTitle = (state = initialState, action) => {
@@ -55,6 +55,12 @@ const categoryTitle = (state = initialState, action) => {
 		case GENERATION_LEVEL_CATEGORY:
 			return Object.assign({}, state, {
 				categoryItemsRedux: action.payload.categoryItemsRedux
+			});
+
+		case CHANGE_CHECKED_CATEGORY:
+			categoryItems[action.payload.indexCategory].checkedCategory = !categoryItems[action.payload.indexCategory].checkedCategory;
+			return Object.assign({}, state, {
+				categoryItemsRedux: categoryItems
 			});
 
 		default: return state;

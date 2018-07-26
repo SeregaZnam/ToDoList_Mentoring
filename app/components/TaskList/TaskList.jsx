@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import TaskItem from '../TaskItem/TaskItem.jsx';
 import './TaskList.css';
 
 class TaskList extends Component {
   render() {
-  	let taskItems = this.props.categoryItems.map((item, indexCategory) => {
+    let { categoryItemsRedux } = this.props;
+
+  	let taskItems = categoryItemsRedux.map((item, indexCategory) => {
       let tasks;
   		if (item.checkedCategory) {
   			  tasks = item.taskList.map((item, indexTasks) => {
+            console.log(item);
   				return <TaskItem 
   					key={indexTasks}
+            item={item}
   					indexTasks={indexTasks}
   					indexCategory={indexCategory}
-  					taskText={item.taskText}
-  					flagChangeTask={item.flagChangeTask}
-            show={item.show}
   					handleCheckedTask={this.props.handleCheckedTask}
             handleModalShow={this.props.handleModalShow.bind(this)}
   				/>
@@ -33,7 +36,7 @@ class TaskList extends Component {
 }
 
 TaskList.propTypes = {
-  categoryItems: PropTypes.arrayOf(
+  categoryItemsRedux: PropTypes.arrayOf(
     PropTypes.shape({
       taskText: PropTypes.string,
       flagChangeTask: PropTypes.bool,
@@ -44,4 +47,10 @@ TaskList.propTypes = {
   handleModalShow: PropTypes.func.isRequired
 };
 
-export default TaskList;
+const mapStateToProps = (state) => {
+  return {
+    categoryItemsRedux: state.categoryTitle.categoryItemsRedux
+  }
+}
+
+export default connect(mapStateToProps)(TaskList);

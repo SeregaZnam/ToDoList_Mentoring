@@ -1,4 +1,4 @@
-import { CHANGE_INPUT_VALUE_CATEGORY_TITLE, ADD_CATEGORY_ITEM, DELETE_CATEGORY_ITEM, CHANGE_CATEGORY_TEXT, SUBMIT_CATEGORY_INPUT, CHANGE_INPUT_CATEGORY_ITEM, ADD_SUBCATEGORY_ITEM, GENERATION_LEVEL_CATEGORY } from '../constants/index.js';
+import { CHANGE_INPUT_VALUE_CATEGORY_TITLE, ADD_CATEGORY_ITEM, DELETE_CATEGORY_ITEM, CHANGE_CATEGORY_TEXT, SUBMIT_CATEGORY_INPUT, CHANGE_INPUT_CATEGORY_ITEM, ADD_SUBCATEGORY_ITEM, GENERATION_LEVEL_CATEGORY, CHANGE_CHECKED_CATEGORY, CHANGE_DISABLED_TASK_INPUTS, HANDLE_CHECKED_TASK } from '../constants/index.js';
 
 export const handleChangeInputRedux = (newInputValue) => {
 	return {
@@ -72,6 +72,34 @@ export const generationLevelCategoryRedux = (categoryItemsRedux) => {
 		type: GENERATION_LEVEL_CATEGORY,
 		payload: {
 			categoryItemsRedux: categoryItemsRedux
+		}
+	}
+}
+
+export const changeCheckedCategoryRedux = (indexCategory) => {
+	return {
+		type: CHANGE_CHECKED_CATEGORY,
+		payload: {
+			indexCategory: indexCategory
+		}
+	}
+}
+
+export const changeDisabledTaskInputs = (attributeDisabled) => {
+	return {
+		type: CHANGE_DISABLED_TASK_INPUTS,
+		payload: {
+			attributeDisabled: attributeDisabled
+		}
+	}
+}
+
+export const handleCheckedTaskRedux = (indexTask, indexCategory) => {
+	return {
+		type: HANDLE_CHECKED_TASK,
+		payload: {
+			indexTask: indexTask, 
+			indexCategory: indexCategory
 		}
 	}
 }

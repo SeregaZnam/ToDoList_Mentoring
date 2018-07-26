@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux } from '../../actions/index';
+import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs } from '../../actions/index';
 import State from '../../stateApp';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
@@ -89,11 +89,6 @@ class App extends Component {
 		categoryItemsRedux = filterCategoryItems;
 	}
 
-	// Change state when entering a value in the input
-	// handleChangeInput(event) {
-	// 	this.setState({ inputValue: event.target.value });
-	// }
-
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
 		let { inputValueRedux, categoryItemsRedux, addCategoryItemRedux } = this.props;
@@ -154,20 +149,19 @@ class App extends Component {
 
 	// Show and hide tasks when clicking on a category
 	toggleShowTasks(index) {
+		let { categoryItemsRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs } = this.props;
 		let attributeDisabled;
 
-		this.state.categoryItems[index].checkedCategory = !this.state.categoryItems[index].checkedCategory;
-		this.setState({ categoryItems: this.state.categoryItems });
+		changeCheckedCategoryRedux(index);
 
-		attributeDisabled = this.state.categoryItems.some((item) => {
+		attributeDisabled = categoryItemsRedux.some((item) => {
 			if (item.checkedCategory) { 
 				return true;
 			} 
 			return false;
 		})
 		
-		this.state.disabledTaskInputs = !attributeDisabled;
-		this.setState({ disabledTaskInputs: this.state.disabledTaskInputs });
+		changeDisabledTaskInputs(!attributeDisabled);
 	}
 
 	// Change checked checkbox task 
@@ -435,9 +429,9 @@ class App extends Component {
 		newNumberLevel.push(lastNumberLevel);
 
 		// Sorting category
-		for (let j = 0; j < this.state.categoryItems.length; j++) {
-			if (this.state.categoryItems[j].levelCategory.join('').indexOf(levelCategory.join('')) == 0 && 
-				levelCategory != this.state.categoryItems[j].levelCategory
+		for (let j = 0; j < categoryItemsRedux.length; j++) {
+			if (categoryItemsRedux[j].levelCategory.join('').indexOf(levelCategory.join('')) == 0 && 
+				levelCategory != categoryItemsRedux[j].levelCategory
 			) {
 				index = j;
 			}
@@ -500,7 +494,8 @@ class App extends Component {
 const mapStateToProps = (state) => {
 	return {
 		inputValueRedux: state.categoryTitle.inputValueRedux,
-		categoryItemsRedux: state.categoryTitle.categoryItemsRedux
+		categoryItemsRedux: state.categoryTitle.categoryItemsRedux,
+		disabledTaskInputsRedux: state.taskTitle.disabledTaskInputsRedux
 	}
 }
 
@@ -510,7 +505,9 @@ const mapActionsToProps = (dispatch) => {
 		addCategoryItemRedux: bindActionCreators(addCategoryItemRedux, dispatch),
 		deleteCategoryItemRedux: bindActionCreators(deleteCategoryItemRedux, dispatch),
 		addSubCategoryItemRedux: bindActionCreators(addSubCategoryItemRedux, dispatch),
-		generationLevelCategoryRedux: bindActionCreators(generationLevelCategoryRedux, dispatch)
+		generationLevelCategoryRedux: bindActionCreators(generationLevelCategoryRedux, dispatch),
+		changeCheckedCategoryRedux: bindActionCreators(changeCheckedCategoryRedux, dispatch),
+		changeDisabledTaskInputs: bindActionCreators(changeDisabledTaskInputs, dispatch)
 	};
 }
 
