@@ -16,6 +16,9 @@ class TaskList extends Component {
   				return <TaskItem 
   					key={indexTasks}
             item={item}
+            show={item.show}
+            taskText={item.taskText}
+            flagChangeTask={item.flagChangeTask}
   					indexTasks={indexTasks}
   					indexCategory={indexCategory}
   				/>

@@ -389,7 +389,7 @@ class App extends Component {
 	// 	this.setState({ isDoneModal: !this.state.isDoneModal });
 	// }
 
-	changeValueSelectModal(event) {
+	/*changeValueSelectModal(event) {
 		let indexCategory = event.target.dataset.indexcategory,
 			indexTask 	  = event.target.dataset.indextask;
 
@@ -401,7 +401,7 @@ class App extends Component {
 				this.setState({ taskModalSelected: this.state.taskModalSelected });
 			}
 		});
-	}
+	}*/
 
 	/************************/
 	/* SubCategory function */
@@ -488,7 +488,7 @@ class App extends Component {
       			// saveModalInfo={this.saveModalInfo.bind(this)}
       			// changeTextModalTask={this.changeTextModalTask.bind(this)}
       			// changeCheckboxDoneModal={this.changeCheckboxDoneModal.bind(this)}
-      			changeValueSelectModal={this.changeValueSelectModal.bind(this)}
+      			// changeValueSelectModal={this.changeValueSelectModal.bind(this)}
       		/>
       	</div>
     );

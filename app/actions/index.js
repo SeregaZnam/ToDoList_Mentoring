@@ -178,12 +178,13 @@ export const changeCheckboxDoneModalRedux = () => {
 	}
 }
 
-export const changeValueSelectModalRedux = (indexCategory, indexTask) => {
+export const changeValueSelectModalRedux = (indexCategory, indexTask, eventValue) => {
 	return {
 		type: CHANGE_VALUE_SELECT_MODAL,
 		payload: {
 			indexCategory: indexCategory, 
-			indexTask: indexTask
+			indexTask: indexTask,
+			eventValue: eventValue
 		} 
 	}
 }

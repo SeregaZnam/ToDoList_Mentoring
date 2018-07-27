@@ -143,7 +143,7 @@ const categoryTitle = (state = initialState, action) => {
 		case CHANGE_VALUE_SELECT_MODAL:
 			let taskModalSelected = state.taskModalSelectedRedux;
 			categoryItems.forEach((item, index) => {
-				if (index == event.target.value) {
+				if (index == action.payload.eventValue) {
 					taskModalSelected = index;
 				}
 			});

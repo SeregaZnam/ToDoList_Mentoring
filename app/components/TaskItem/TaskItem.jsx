@@ -16,7 +16,7 @@ const TaskItem = ({ item, handleCheckedTaskRedux, handleModalShowRedux, indexCat
       id={idLabel}
       data-index={indexTasks}
       data-category={indexCategory}
-      defaultChecked={item.flagChangeTask}
+      checked={item.flagChangeTask}
       onChange={(event) => {
         let eventElement  = event.target,
             indexTask     = eventElement.dataset.index,

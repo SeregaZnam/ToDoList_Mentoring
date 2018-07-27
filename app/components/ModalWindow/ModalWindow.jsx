@@ -8,7 +8,7 @@ import './ModalWindow.css';
 
 class ModalWindow extends Component {
   render() {
-    let { textModalTaskRedux, isDoneModalRedux, indexModalTaskRedux, indexModalCategoryRedux, showModalRedux, categoryItemsRedux, handleModalCloseRedux, saveModalInfoRedux, changeTextModalTaskRedux, changeCheckboxDoneModalRedux, changeValueSelectModalRedux } = this.props;
+    let { textModalTaskRedux, isDoneModalRedux, indexModalTaskRedux, indexModalCategoryRedux, taskModalSelectedRedux, showModalRedux, categoryItemsRedux, handleModalCloseRedux, saveModalInfoRedux, changeTextModalTaskRedux, changeCheckboxDoneModalRedux, changeValueSelectModalRedux } = this.props;
   	let defaultValueSelect,
   		  optionsValue;
   	
@@ -19,7 +19,7 @@ class ModalWindow extends Component {
   	});
 
   	if (showModalRedux) {
-  		defaultValueSelect = this.props.taskModalSelected;
+  		defaultValueSelect = taskModalSelectedRedux;
   	}
 
     return (
@@ -52,13 +52,14 @@ class ModalWindow extends Component {
       		<FormGroup controlId="formControlsSelect">
 		      <FormControl 
 		      	componentClass="select"
-		      	value={defaultValueSelect}
+		      	defaultValue={defaultValueSelect}
 		      	data-indexcategory={indexModalCategoryRedux}
 		      	data-indextask={indexModalTaskRedux}
 		      	onChange={(event) => {
               let indexCategory = event.target.dataset.indexcategory,
-                  indexTask     = event.target.dataset.indextask;
-              changeValueSelectModalRedux(indexCategory, indexTask);
+                  indexTask     = event.target.dataset.indexTask,
+                  eventValue    = event.target.value;
+              changeValueSelectModalRedux(indexCategory, indexTask, eventValue);
             }}
 		      >
 		      	{optionsValue}
@@ -82,14 +83,14 @@ class ModalWindow extends Component {
 }
 
 ModalWindow.propTypes = {
-  categoryItems: PropTypes.arrayOf(
+  categoryItemsRedux: PropTypes.arrayOf(
     PropTypes.shape({
       text: PropTypes.string
     })
   ),
-  changeCheckboxDoneModal: PropTypes.func.isRequired,
+  changeCheckboxDoneModalRedux: PropTypes.func.isRequired,
   changeTextModalTaskRedux: PropTypes.func.isRequired,
-  changeValueSelectModal: PropTypes.func.isRequired,
+  changeValueSelectModalRedux: PropTypes.func.isRequired,
   handleModalCloseRedux: PropTypes.func.isRequired,
   indexModalCategoryRedux: PropTypes.string,
   indexModalTaskRedux: PropTypes.string,
@@ -107,7 +108,8 @@ const mapStateToProps = (state) => {
     textModalTaskRedux: state.categoryTitle.textModalTaskRedux,
     isDoneModalRedux: state.categoryTitle.isDoneModalRedux,
     indexModalCategoryRedux: state.categoryTitle.indexModalCategoryRedux,
-    indexModalTaskRedux: state.categoryTitle.indexModalTaskRedux
+    indexModalTaskRedux: state.categoryTitle.indexModalTaskRedux,
+    taskModalSelectedRedux: state.categoryTitle.taskModalSelectedRedux
   }
 }
 
