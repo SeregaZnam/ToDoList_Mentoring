@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs, addTaskInCategoryRedux, hideTasksCompletedInputSearch, showTasksRedux } from '../../actions/index';
-import State from '../../stateApp';
+// import State from '../../stateApp';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
 import ModalWindow from '../ModalWindow/ModalWindow.jsx';
@@ -13,7 +13,7 @@ class App extends Component {
 		super(props);
 
 		// textModalTask, isDoneModal, indexModalCategory and indexModalTask are created to save data in the modal window
-		this.state = State;
+		// this.state = State;
 		this.generationLevelCategory();
 		this.filterCategoryItems();
 	}
@@ -135,8 +135,7 @@ class App extends Component {
 	// Deleting category item
 	deleteCategoryItem(levelCategory, index) {
 		let { categoryItemsRedux, deleteCategoryItemRedux } = this.props;
-		let categoryItems = this.state.categoryItems,
-			indices       = [];
+		let indices       = [];
 
 		for (let i = 0; i < categoryItemsRedux.length; i++) {
 			if (categoryItemsRedux[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
@@ -323,86 +322,6 @@ class App extends Component {
 		}
 	}
 
-	/*******************/
-	/* Modal functions */
-	/*******************/
-
-	// handleModalClose() {
-	// 	this.setState({ showModal: false });
-	// }
-
-/*	handleModalShow(event) {
-		let eventElement  = event.target.previousElementSibling.previousElementSibling,
-			indexCategory = eventElement.dataset.category,
-			indexTask     = eventElement.dataset.index;
-
-		this.state.indexModalCategory = indexCategory;
-		this.state.indexTask 	      = indexTask;
-		this.state.taskModalSelected  = indexCategory;
-		this.state.taskInfo = {
-			task: this.state.categoryItems[indexCategory].taskList[indexTask],
-			indexCategoryTask: indexCategory,
-			indexTask: indexTask
-		};
-
-		this.setState({ 
-			indexModalCategory: this.state.indexModalCategory,
-			indexModalTask: this.state.indexTask,
-			textModalTask: this.state.categoryItems[indexCategory].taskList[indexTask].taskText,
-			isDoneModal: this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask,
-			taskModalSelected: this.state.taskModalSelected,
-			taskInfo: this.state.taskInfo
-		});
-	
-		this.setState({ showModal: true });
-	}*/
-
-	/*saveModalInfo(modalText, modalChecked) {
-		let indexCategory 		  = this.state.indexModalCategory,
-			indexTask     		  = this.state.indexTask,
-			indexModalCategory 	  = this.state.indexModalCategory,
-			indexModalTask 		  = this.state.indexModalTask,
-			taskInfoIndexCategory = this.state.taskInfo.indexCategoryTask,
-			taskInfoIndexTask     = this.state.taskInfo.indexTask,
-			taskModalSelected 	  = this.state.taskModalSelected;
-
-		this.state.categoryItems[indexCategory].taskList[indexTask].taskText = modalText;
-		this.state.categoryItems[indexCategory].taskList[indexTask].flagChangeTask = modalChecked;
-
-		// If the select was changed
-		if (indexCategory != taskModalSelected) {
-			this.state.categoryItems[taskModalSelected].taskList.push(this.state.taskInfo.task);
-			this.state.categoryItems[taskInfoIndexCategory].taskList.splice(taskInfoIndexTask, 1);
-		}
-
-		this.setState({ 
-			showModal: false,
-			categoryItems: this.state.categoryItems
-		});
-	}*/
-
-	/*changeTextModalTask(event) {
-		this.setState({ textModalTask: event.target.value });
-	}*/
-
-	// changeCheckboxDoneModal() {
-	// 	this.setState({ isDoneModal: !this.state.isDoneModal });
-	// }
-
-	/*changeValueSelectModal(event) {
-		let indexCategory = event.target.dataset.indexcategory,
-			indexTask 	  = event.target.dataset.indextask;
-
-		this.state.taskModalSelected = this.state.categoryItems.length;
-
-		this.state.categoryItems.forEach((item, index) => {
-			if (index == event.target.value) {
-				this.state.taskModalSelected = index;
-				this.setState({ taskModalSelected: this.state.taskModalSelected });
-			}
-		});
-	}*/
-
 	/************************/
 	/* SubCategory function */
 	/************************/
@@ -461,35 +380,19 @@ class App extends Component {
     return (
     	<div className="app-main">
       		<CategoryArea 
-      			categoryItems={this.state.categoryItems} 
-      			inputValue={this.state.inputValue}
       			addCategory={this.addCategory.bind(this)}
     			deleteCategoryItem={this.deleteCategoryItem.bind(this)}
     			toggleShowTasks={this.toggleShowTasks.bind(this)}
     			addSubCategoryItem={this.addSubCategoryItem.bind(this)}
       		/>
       		<TasksArea 
-      			categoryItems={this.state.categoryItems}
-      			disabledTaskInputs={this.state.disabledTaskInputs}
       			addTaskInCategory={this.addTaskInCategory.bind(this)}
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
       			searchInputDelete={this.searchInputDelete.bind(this)}
       			filterCategoryItems={this.filterCategoryItems.bind(this)}
       		/>
-      		<ModalWindow 
-      			categoryItems={this.state.categoryItems}
-      			showModal={this.state.showModal}
-      			textModalTask={this.state.textModalTask}
-      			isDoneModal={this.state.isDoneModal}
-      			indexModalCategory={this.state.indexModalCategory}
-      			indexModalTask={this.state.indexModalTask}
-      			taskModalSelected={this.state.taskModalSelected}
-      			// saveModalInfo={this.saveModalInfo.bind(this)}
-      			// changeTextModalTask={this.changeTextModalTask.bind(this)}
-      			// changeCheckboxDoneModal={this.changeCheckboxDoneModal.bind(this)}
-      			// changeValueSelectModal={this.changeValueSelectModal.bind(this)}
-      		/>
+      		<ModalWindow />
       	</div>
     );
   }

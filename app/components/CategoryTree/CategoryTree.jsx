@@ -36,9 +36,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-const mapActionsToProps = (dispatch) => {
-    return {
-    };
-}
-
-export default connect(mapStateToProps, mapActionsToProps)(CategoryTree);
+export default connect(mapStateToProps)(CategoryTree);

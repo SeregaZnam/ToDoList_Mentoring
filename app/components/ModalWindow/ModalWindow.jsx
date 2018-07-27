@@ -96,8 +96,8 @@ ModalWindow.propTypes = {
   indexModalTaskRedux: PropTypes.string,
   isDoneModalRedux: PropTypes.bool,
   saveModalInfoRedux: PropTypes.func.isRequired,
-  showModal: PropTypes.bool.isRequired,
-  taskModalSelected: PropTypes.any,
+  showModalRedux: PropTypes.bool.isRequired,
+  taskModalSelectedRedux: PropTypes.any,
   textModalTaskRedux: PropTypes.string
 };
 
