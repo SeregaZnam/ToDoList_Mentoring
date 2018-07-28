@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import CategoryItem from '../CategoryItem/CategoryItem.jsx';
 import './CategoryTree.css';
 
-const CategoryTree = ({ addSubCategoryItem, categoryItemsRedux, changeCategoryText, deleteCategoryItem, toggleShowTasks }) => {
+const CategoryTree = ({ addSubCategoryItem, categoryItemsRedux, deleteCategoryItem, toggleShowTasks }) => {
     let categoryItemNodes = categoryItemsRedux.map((item, index) => {
         return <div key={index}>
             <CategoryItem 

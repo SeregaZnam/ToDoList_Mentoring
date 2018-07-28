@@ -6,15 +6,42 @@ import { changeCategoryTextRedux, submitCategoryInputRedux, changeInputCategoryI
 import './CategoryItem.css';
 
 class CategoryItem extends Component {
+    constructor(props) {
+        super(props);
+        // При присваивании функций с bind ломается фильтрация
+        // this.deleteCategoryItem = this.props.deleteCategoryItem.bind(null, this.props.item.levelCategory, this.props.index);
+        // this.addSubCategoryItem = this.props.addSubCategoryItem.bind(null, this.props.item.levelCategory, this.props.item.id, this.props.index);
+        // this.toggleShowTasks    = this.props.toggleShowTasks.bind(null, this.props.index);
+    }
+
+    static propTypes = {
+        addSubCategoryItem: PropTypes.func.isRequired,
+        changeCategoryTextRedux: PropTypes.func.isRequired,
+        changeInputCategoryItemRedux: PropTypes.func.isRequired,
+        deleteCategoryItem: PropTypes.func.isRequired,
+        index: PropTypes.number.isRequired,
+        submitCategoryInputRedux: PropTypes.func.isRequired,
+        toggleShowTasks: PropTypes.func.isRequired,
+        item: PropTypes.shape({
+            checkedCategory: PropTypes.bool.isRequired,
+            flagChangeText: PropTypes.bool.isRequired,
+            id: PropTypes.number.isRequired,
+            parentId: PropTypes.number.isRequired,
+            levelCategory: PropTypes.array.isRequired,
+            taskList: PropTypes.array,
+            text: PropTypes.text
+        })
+    };
+
   render() {
-    let { changeCategoryTextRedux, submitCategoryInputRedux, changeInputCategoryItemRedux } = this.props;
+    let { item, index, checkedInput, changeCategoryTextRedux, submitCategoryInputRedux, changeInputCategoryItemRedux } = this.props;
     let categoryNode,
         styleSubCategory,
         widthSubCategory,
         marginLeftSubCategory,
-        item;
+        itemLevel;
 
-    if (this.props.item.flagChangeText) {
+    if (item.flagChangeText) {
         categoryNode = <form 
             className="category-item__form" 
             onSubmit={(event) => {
@@ -28,8 +55,8 @@ class CategoryItem extends Component {
             <input 
                 type="text" 
                 className="category-item__form_input" 
-                value={this.props.item.text}
-                data-index={this.props.index}
+                value={item.text}
+                data-index={index}
                 onChange={(event) => {
                     let element = event.target.children[0],
                         indexCategory = event.target.dataset.index,
@@ -41,34 +68,34 @@ class CategoryItem extends Component {
         </form>;
     } else {
         // For correcting the click processing we create different id
-        let idLabel = "category-item__checkbox--label-" + this.props.index;
+        let idLabel = "category-item__checkbox--label-" + index;
 
         categoryNode = <span>
             <input 
                 type="checkbox"
                 id={idLabel}
                 className="category-item__checkbox"
-                checked={this.props.checkedInput}
+                checked={checkedInput}
                 onChange={this.props.toggleShowTasks.bind(null, this.props.index)}
             />
             <label htmlFor={idLabel} className="category-item__text">
-                {this.props.item.text}
+                {item.text}
             </label>
         </span>;
     }
 
     // Category alignment
-    item = this.props.item.levelCategory;
-    for (let i = 0; i < this.props.item.levelCategory.length; i++) {
-     if (item[i] == 0) {
-         delete item[i];
+    itemLevel = item.levelCategory;
+    for (let i = 0; i < item.levelCategory.length; i++) {
+     if (itemLevel[i] == 0) {
+         delete itemLevel[i];
      }
     }
     // item.join('').split('') deleting empty from an array
-    item = item.join('').split('');
+    itemLevel = itemLevel.join('').split('');
 
-    if (item.length > 1) {
-        widthSubCategory = 100 - Number(item.length) * 5 + '%';
+    if (itemLevel.length > 1) {
+        widthSubCategory = 100 - Number(itemLevel.length) * 5 + '%';
         marginLeftSubCategory = 100 - parseInt(widthSubCategory) + '%';
 
         styleSubCategory = {
@@ -92,25 +119,8 @@ class CategoryItem extends Component {
   }
 }
 
-CategoryItem.propTypes = {
-    addSubCategoryItem: PropTypes.func.isRequired,
-    changeInputCategoryItemRedux: PropTypes.func.isRequired,
-    deleteCategoryItem: PropTypes.func.isRequired,
-    index: PropTypes.number.isRequired,
-    submitCategoryInputRedux: PropTypes.func.isRequired,
-    toggleShowTasks: PropTypes.func.isRequired,
-    item: PropTypes.shape({
-        checkedCategory: PropTypes.bool.isRequired,
-        flagChangeText: PropTypes.bool.isRequired,
-        levelCategory: PropTypes.array.isRequired,
-        taskList: PropTypes.array,
-        text: PropTypes.text
-    })
-};
-
 const mapStateToProps = (state) => {
-    return {
-    }
+    return {};
 }
 
 const mapActionsToProps = (dispatch) => {

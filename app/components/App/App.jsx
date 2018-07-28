@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs, addTaskInCategoryRedux, hideTasksCompletedInputSearch, showTasksRedux } from '../../actions/index';
-// import State from '../../stateApp';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
 import ModalWindow from '../ModalWindow/ModalWindow.jsx';
@@ -12,14 +11,21 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 
-		// textModalTask, isDoneModal, indexModalCategory and indexModalTask are created to save data in the modal window
-		// this.state = State;
+		this.addCategory 		= this.addCategory.bind(this);
+		this.deleteCategoryItem = this.deleteCategoryItem.bind(this);
+		this.toggleShowTasks 	= this.toggleShowTasks.bind(this);
+		this.addSubCategoryItem = this.addSubCategoryItem.bind(this);
+		this.addTaskInCategory  = this.addTaskInCategory.bind(this);
+		this.searchTaskInput    = this.searchTaskInput.bind(this);
+		this.showDoneTasks 		= this.showDoneTasks.bind(this);
+		this.searchInputDelete  = this.searchInputDelete.bind(this);
+
 		this.generationLevelCategory();
 		this.filterCategoryItems();
 	}
 
 	generationLevelCategory() {
-		let { categoryItemsRedux, generationLevelCategoryRedux } = this.props;
+		const { categoryItemsRedux, generationLevelCategoryRedux } = this.props;
 		let i = 1;
 
 		categoryItemsRedux.forEach(item => {
@@ -91,7 +97,7 @@ class App extends Component {
 
 	// Adding a category from the component AddCategoryTitle
 	addCategory(event) {
-		let { inputValueRedux, categoryItemsRedux, addCategoryItemRedux } = this.props;
+		const { inputValueRedux, categoryItemsRedux, addCategoryItemRedux } = this.props;
 		let maxIdCategory = 0,
 			maxLevelCategory,
 			formControl		   = event.target,
@@ -109,7 +115,12 @@ class App extends Component {
 				}
 				return item.levelCategory[0];
 			});
-			maxLevelCategory = Math.max(...maxLevelCategory) + 1;
+			
+			if (maxLevelCategory.length == 0) {
+				maxLevelCategory = 1;
+			} else {
+				maxLevelCategory = Math.max(...maxLevelCategory) + 1;
+			}
 
 			newCategoryItem = { 
 				id: maxIdCategory + 1,
@@ -134,8 +145,8 @@ class App extends Component {
 
 	// Deleting category item
 	deleteCategoryItem(levelCategory, index) {
-		let { categoryItemsRedux, deleteCategoryItemRedux } = this.props;
-		let indices       = [];
+		const { categoryItemsRedux, deleteCategoryItemRedux } = this.props;
+		let indices = [];
 
 		for (let i = 0; i < categoryItemsRedux.length; i++) {
 			if (categoryItemsRedux[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
@@ -148,7 +159,7 @@ class App extends Component {
 
 	// Show and hide tasks when clicking on a category
 	toggleShowTasks(index) {
-		let { categoryItemsRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs } = this.props;
+		const { categoryItemsRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs } = this.props;
 		let attributeDisabled;
 
 		changeCheckedCategoryRedux(index);
@@ -165,7 +176,7 @@ class App extends Component {
 
 	// Add a task to the category
 	addTaskInCategory(event) {
-		let { categoryItemsRedux, addTaskInCategoryRedux } = this.props;
+		const { categoryItemsRedux, addTaskInCategoryRedux } = this.props;
 		let elemEvent    = event.target,
 			addTaskInput = elemEvent.querySelector('input'),
 			newTask;
@@ -196,7 +207,7 @@ class App extends Component {
 
 	// Search Task
 	searchTaskInput(event) {
-		let { categoryItemsRedux, hideTasksCompletedInputSearch, showTasksRedux } = this.props;
+		const { categoryItemsRedux, hideTasksCompletedInputSearch, showTasksRedux } = this.props;
 		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox'),
 			flagShow;
 
@@ -246,7 +257,7 @@ class App extends Component {
 	}
 
 	searchInputDelete(event) {
-		let { categoryItemsRedux, showTasksRedux, hideTasksCompletedInputSearch } = this.props;
+		const { categoryItemsRedux, showTasksRedux, hideTasksCompletedInputSearch } = this.props;
 		let showDoneCheckbox = document.querySelector('.tasks-inputs__checkbox'),
 			flagShow;
 
@@ -273,7 +284,7 @@ class App extends Component {
 
 	// Show done tasks
 	showDoneTasks(event) {
-		let { categoryItemsRedux, showTasksRedux, hideTasksCompletedInputSearch } = this.props;
+		const { categoryItemsRedux, showTasksRedux, hideTasksCompletedInputSearch } = this.props;
 		let inputSearch = document.querySelector('.tasks-inputs__search input'),
 			flagShow;
 
@@ -327,7 +338,7 @@ class App extends Component {
 	/************************/
 
 	addSubCategoryItem(levelCategory, parentId, index) {
-		let { categoryItemsRedux, addSubCategoryItemRedux } = this.props;
+		const { categoryItemsRedux, addSubCategoryItemRedux } = this.props;
 		let lengthNextLevel = levelCategory.length + 1,
 			lastNumberLevel = 0,
 			newNumberLevel  = [],
@@ -390,7 +401,6 @@ class App extends Component {
       			searchTaskInput={this.searchTaskInput.bind(this)}
       			showDoneTasks={this.showDoneTasks.bind(this)}
       			searchInputDelete={this.searchInputDelete.bind(this)}
-      			filterCategoryItems={this.filterCategoryItems.bind(this)}
       		/>
       		<ModalWindow />
       	</div>

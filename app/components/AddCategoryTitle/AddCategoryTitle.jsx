@@ -4,7 +4,7 @@ import WriteNoteInput from '../WriteNoteInput/WriteNoteInput.jsx';
 import './AddCategoryTitle.css';
 
 const AddCategoryTitle = ({ addCategory }) => {
-  let flagAddCategory = true;
+  const flagAddCategory = true;
 
   return <div className="add-category-title">
     <WriteNoteInput 

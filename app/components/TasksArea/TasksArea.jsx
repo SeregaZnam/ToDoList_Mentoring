@@ -4,7 +4,7 @@ import TasksInputs from '../TasksInputs/TasksInputs.jsx';
 import TaskList from '../TaskList/TaskList.jsx';
 import './TasksArea.css';
 
-const TasksArea = ({ addTaskInCategory, categoryItems, searchInputDelete, searchTaskInput, showDoneTasks, filterCategoryItems }) => {
+const TasksArea = ({ addTaskInCategory, searchInputDelete, searchTaskInput, showDoneTasks }) => {
   return <div className="tasks-area">
       <TasksInputs 
         addTaskInCategory={addTaskInCategory}
@@ -12,16 +12,12 @@ const TasksArea = ({ addTaskInCategory, categoryItems, searchInputDelete, search
         showDoneTasks={showDoneTasks}
         searchInputDelete={searchInputDelete}
       />
-      <TaskList 
-        categoryItems={categoryItems}
-        filterCategoryItems={filterCategoryItems}
-      />
+      <TaskList />
   </div>;
 };
 
 TasksArea.propTypes = {
   addTaskInCategory: PropTypes.func.isRequired,
-  categoryItems: PropTypes.array,
   searchInputDelete: PropTypes.func.isRequired,
   searchTaskInput: PropTypes.func.isRequired,
   showDoneTasks: PropTypes.func.isRequired

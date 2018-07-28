@@ -8,7 +8,7 @@ import WriteNoteInput from '../WriteNoteInput/WriteNoteInput.jsx';
 import './TasksInputs.css';
 
 const TasksInputs = ({ addTaskInCategory, disabledTaskInputsRedux, searchInputDelete, searchTaskInput, showDoneTasks }) => {
-  let flagDisabled = disabledTaskInputsRedux;
+  const flagDisabled = disabledTaskInputsRedux;
 
   return <div className="tasks-inputs">
     <TaskInputDone 

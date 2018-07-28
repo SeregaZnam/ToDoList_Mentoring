@@ -7,8 +7,16 @@ import { FormGroup, Button, InputGroup, FormControl, Tooltip } from 'react-boots
 import './WriteNoteInput.css';
 
 class WriteNoteInput extends Component {
+	static propTypes = {
+		addNote: PropTypes.func.isRequired,
+		inputValueRedux: PropTypes.string,
+		handleChangeInputRedux: PropTypes.func,
+		flagDisabled: PropTypes.bool,
+		flagAddCategory: PropTypes.bool
+	};
+
 	render() {
-		let { categoryText, flagAddCategory, flagDisabled, addNote, inputValueRedux, handleChangeInputRedux } = this.props;
+		let { flagAddCategory, flagDisabled, addNote, inputValueRedux, handleChangeInputRedux } = this.props;
 		let formControl;
 
 		flagDisabled = flagDisabled == undefined ? false : flagDisabled;
@@ -56,16 +64,6 @@ class WriteNoteInput extends Component {
 		</form>;
 	}
 }
-
-
-
-WriteNoteInput.propTypes = {
-	addNote: PropTypes.func.isRequired,
-	inputValueRedux: PropTypes.string,
-	handleChangeInputRedux: PropTypes.func,
-	flagDisabled: PropTypes.bool
-};
-
 
 const mapStateToProps = (state) => {
 	return {

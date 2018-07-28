@@ -18,9 +18,9 @@ const TaskItem = ({ item, handleCheckedTaskRedux, handleModalShowRedux, indexCat
       data-category={indexCategory}
       checked={item.flagChangeTask}
       onChange={(event) => {
-        let eventElement  = event.target,
-            indexTask     = eventElement.dataset.index,
-            indexCategory = eventElement.dataset.category;
+        const eventElement  = event.target,
+              indexTask     = eventElement.dataset.index,
+              indexCategory = eventElement.dataset.category;
         handleCheckedTaskRedux(indexTask, indexCategory);
       }}
     />
@@ -28,9 +28,9 @@ const TaskItem = ({ item, handleCheckedTaskRedux, handleModalShowRedux, indexCat
     <input 
       className="task-item__editing" 
       onClick={(event) => { 
-        let eventElement  = event.target.previousElementSibling.previousElementSibling,
-            indexCategory = eventElement.dataset.category,
-            indexTask     = eventElement.dataset.index;
+        const eventElement  = event.target.previousElementSibling.previousElementSibling,
+              indexCategory = eventElement.dataset.category,
+              indexTask     = eventElement.dataset.index;
         handleModalShowRedux(indexCategory, indexTask); 
       }} 
       type="image" 
@@ -51,8 +51,7 @@ TaskItem.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-  return {
-  }
+  return {};
 }
 
 const mapActionsToProps = (dispatch) => {

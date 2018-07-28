@@ -6,10 +6,20 @@ import TaskItem from '../TaskItem/TaskItem.jsx';
 import './TaskList.css';
 
 class TaskList extends Component {
-  render() {
-    let { categoryItemsRedux } = this.props;
+  static propTypes = {
+    categoryItemsRedux: PropTypes.arrayOf(
+      PropTypes.shape({
+        taskText: PropTypes.string,
+        flagChangeTask: PropTypes.bool,
+        show: PropTypes.bool
+      })
+    ),
+  };
 
-  	let taskItems = categoryItemsRedux.map((item, indexCategory) => {
+  render() {
+    const { categoryItemsRedux } = this.props;
+
+  	const taskItems = categoryItemsRedux.map((item, indexCategory) => {
       let tasks;
   		if (item.checkedCategory) {
   			  tasks = item.taskList.map((item, indexTasks) => {
@@ -34,16 +44,6 @@ class TaskList extends Component {
     );
   }
 }
-
-TaskList.propTypes = {
-  categoryItemsRedux: PropTypes.arrayOf(
-    PropTypes.shape({
-      taskText: PropTypes.string,
-      flagChangeTask: PropTypes.bool,
-      show: PropTypes.bool
-    })
-  ),
-};
 
 const mapStateToProps = (state) => {
   return {

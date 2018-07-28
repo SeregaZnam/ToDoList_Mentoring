@@ -20,7 +20,6 @@ export const initialState = {
 			text: 'Category Test 1',
 			checkedCategory: false,
 			flagChangeText: false,
-			// levelCategory: [1],
 			taskList: [
 				{taskText: 'To do item 1 1', flagChangeTask: true, show: true},
 				{taskText: 'To do item 1 2', flagChangeTask: true, show: true},

@@ -7,6 +7,25 @@ import { Modal, Button, FormControl, FormGroup } from 'react-bootstrap';
 import './ModalWindow.css';
 
 class ModalWindow extends Component {
+  static propTypes = {
+    categoryItemsRedux: PropTypes.arrayOf(
+      PropTypes.shape({
+        text: PropTypes.string.isRequired
+      })
+    ),
+    changeCheckboxDoneModalRedux: PropTypes.func.isRequired,
+    changeTextModalTaskRedux: PropTypes.func.isRequired,
+    changeValueSelectModalRedux: PropTypes.func.isRequired,
+    handleModalCloseRedux: PropTypes.func.isRequired,
+    indexModalCategoryRedux: PropTypes.string,
+    indexModalTaskRedux: PropTypes.string,
+    isDoneModalRedux: PropTypes.bool,
+    saveModalInfoRedux: PropTypes.func.isRequired,
+    showModalRedux: PropTypes.bool.isRequired,
+    taskModalSelectedRedux: PropTypes.any,
+    textModalTaskRedux: PropTypes.string
+  };
+
   render() {
     let { textModalTaskRedux, isDoneModalRedux, indexModalTaskRedux, indexModalCategoryRedux, taskModalSelectedRedux, showModalRedux, categoryItemsRedux, handleModalCloseRedux, saveModalInfoRedux, changeTextModalTaskRedux, changeCheckboxDoneModalRedux, changeValueSelectModalRedux } = this.props;
   	let defaultValueSelect,
@@ -81,25 +100,6 @@ class ModalWindow extends Component {
     );
   }
 }
-
-ModalWindow.propTypes = {
-  categoryItemsRedux: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string
-    })
-  ),
-  changeCheckboxDoneModalRedux: PropTypes.func.isRequired,
-  changeTextModalTaskRedux: PropTypes.func.isRequired,
-  changeValueSelectModalRedux: PropTypes.func.isRequired,
-  handleModalCloseRedux: PropTypes.func.isRequired,
-  indexModalCategoryRedux: PropTypes.string,
-  indexModalTaskRedux: PropTypes.string,
-  isDoneModalRedux: PropTypes.bool,
-  saveModalInfoRedux: PropTypes.func.isRequired,
-  showModalRedux: PropTypes.bool.isRequired,
-  taskModalSelectedRedux: PropTypes.any,
-  textModalTaskRedux: PropTypes.string
-};
 
 const mapStateToProps = (state) => {
   return {
