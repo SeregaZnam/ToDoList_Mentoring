@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs, addTaskInCategoryRedux, hideTasksCompletedInputSearch, showTasksRedux } from '../../actions/index';
+import { handleChangeInputRedux, addCategoryItemRedux, deleteCategoryItemRedux, addSubCategoryItemRedux, generationLevelCategoryRedux, filterCategoryItemsRedux, changeCheckedCategoryRedux, changeDisabledTaskInputs, addTaskInCategoryRedux, hideTasksCompletedInputSearch, showTasksRedux } from '../../actions/index';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
 import ModalWindow from '../ModalWindow/ModalWindow.jsx';
@@ -26,13 +26,31 @@ class App extends Component {
 
 	generationLevelCategory() {
 		const { categoryItemsRedux, generationLevelCategoryRedux } = this.props;
-		let i = 1;
+		let i = 1,
+			filterCategoryItems = [],
+			newCategoryItems = [];
 
 		categoryItemsRedux.forEach(item => {
 			item.levelCategory = [];
 		})
 
-		categoryItemsRedux.forEach(item => {
+		filterCategoryItems = categoryItemsRedux.slice();
+
+		filterCategoryItems = categoryItemsRedux.map(item => {
+			return item.id;
+		})
+
+		filterCategoryItems = filterCategoryItems.sort((a, b) => a - b);
+
+		filterCategoryItems.forEach(item => {
+			categoryItemsRedux.forEach(categoryItem => {
+				if (item == categoryItem.id) {
+					newCategoryItems.push(categoryItem);
+				}
+			})
+		})
+
+		newCategoryItems.forEach(item => {
 			if (item.parentId == 0) {
 				item.levelCategory.push(i);
 				i++;
@@ -56,7 +74,7 @@ class App extends Component {
 	}
 
 	filterCategoryItems() {
-		let { categoryItemsRedux } = this.props;
+		const { categoryItemsRedux, filterCategoryItemsRedux } = this.props;
 		let maxLength = 0,
 			filterCategoryArray = [],
 			filterCategoryItems = [];
@@ -92,7 +110,7 @@ class App extends Component {
 			});
 		});
 
-		categoryItemsRedux = filterCategoryItems;
+		filterCategoryItemsRedux(filterCategoryItems);
 	}
 
 	// Adding a category from the component AddCategoryTitle
@@ -423,6 +441,7 @@ const mapActionsToProps = (dispatch) => {
 		deleteCategoryItemRedux: bindActionCreators(deleteCategoryItemRedux, dispatch),
 		addSubCategoryItemRedux: bindActionCreators(addSubCategoryItemRedux, dispatch),
 		generationLevelCategoryRedux: bindActionCreators(generationLevelCategoryRedux, dispatch),
+		filterCategoryItemsRedux: bindActionCreators(filterCategoryItemsRedux, dispatch),
 		changeCheckedCategoryRedux: bindActionCreators(changeCheckedCategoryRedux, dispatch),
 		changeDisabledTaskInputs: bindActionCreators(changeDisabledTaskInputs, dispatch),
 		addTaskInCategoryRedux: bindActionCreators(addTaskInCategoryRedux, dispatch),
