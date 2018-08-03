@@ -2,28 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { changeCategoryTextRedux, submitCategoryInputRedux, changeInputCategoryItemRedux } from '../../actions/index';
+import { changeCategoryTextRedux, deleteCategoryItemRedux, addSubCategoryItemRedux } from '../../actions/index';
+import ChangeItemCategoryForm from '../ChangeItemCategoryForm/ChangeItemCategoryForm.jsx';
+import ChangeItemCategoryNode from '../ChangeItemCategoryNode/ChangeItemCategoryNode.jsx';
 import ImageComponent from '../ImageComponent/ImageComponent.jsx';
 import { imageSrcEditCategory, imageSrcCategoryDelete, imageSrcCategoryAdd } from '../ImageComponent/srcImage';
 import './CategoryItem.css';
 
 class CategoryItem extends Component {
-    constructor(props) {
-        super(props);
-        // При присваивании функций с bind ломается фильтрация
-        // this.deleteCategoryItem = this.props.deleteCategoryItem.bind(null, this.props.item.levelCategory, this.props.index);
-        // this.addSubCategoryItem = this.props.addSubCategoryItem.bind(null, this.props.item.levelCategory, this.props.item.id, this.props.index);
-        // this.toggleShowTasks    = this.props.toggleShowTasks.bind(null, this.props.index);
-    }
-
     static propTypes = {
-        addSubCategoryItem: PropTypes.func.isRequired,
         changeCategoryTextRedux: PropTypes.func.isRequired,
-        changeInputCategoryItemRedux: PropTypes.func.isRequired,
-        deleteCategoryItem: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
-        submitCategoryInputRedux: PropTypes.func.isRequired,
-        toggleShowTasks: PropTypes.func.isRequired,
         item: PropTypes.shape({
             checkedCategory: PropTypes.bool.isRequired,
             flagChangeText: PropTypes.bool.isRequired,
@@ -35,8 +24,71 @@ class CategoryItem extends Component {
         })
     };
 
+    deleteCategoryItem(levelCategory, index) {
+        const { categoryItemsRedux, deleteCategoryItemRedux } = this.props;
+        let indices = [];
+
+        for (let i = 0; i < categoryItemsRedux.length; i++) {
+            if (categoryItemsRedux[i].levelCategory.join('').indexOf(levelCategory.join('')) == 0) {
+                indices.push(i);
+            }
+        }
+
+        deleteCategoryItemRedux(index, indices.length);
+    }
+
+    addSubCategoryItem(levelCategory, parentId, index) {
+        const { categoryItemsRedux, addSubCategoryItemRedux } = this.props;
+        let lengthNextLevel = levelCategory.length + 1,
+            lastNumberLevel = 0,
+            newNumberLevel  = [],
+            maxIdCategory = 0,
+            newSubCategoryItem;
+
+        // Generation of a level number
+        categoryItemsRedux.forEach((item) => {
+            if (maxIdCategory < item.id) {
+                maxIdCategory = item.id;
+            }
+
+            if (item.levelCategory.length == lengthNextLevel && levelCategory != item.levelCategory) {
+                lastNumberLevel < item.levelCategory[item.levelCategory.length - 1] ?
+                    lastNumberLevel = item.levelCategory[item.levelCategory.length - 1] : 
+                    lastNumberLevel;
+            }
+        });
+
+        for (var i = 0; i < levelCategory.length; i++) {
+            newNumberLevel.push(levelCategory[i]);
+        }
+
+        lastNumberLevel++;
+        newNumberLevel.push(lastNumberLevel);
+
+        // Sorting category
+        for (let j = 0; j < categoryItemsRedux.length; j++) {
+            if (categoryItemsRedux[j].levelCategory.join('').indexOf(levelCategory.join('')) == 0 && 
+                levelCategory != categoryItemsRedux[j].levelCategory
+            ) {
+                index = j;
+            }
+        }
+
+        newSubCategoryItem = {
+            id: maxIdCategory + 1,
+            parentId: parentId,
+            text: '',
+            checkedCategory: false,
+            flagChangeText: true,
+            levelCategory: newNumberLevel,
+            taskList: []
+        };
+
+        addSubCategoryItemRedux(index, newSubCategoryItem);
+    }
+
   render() {
-    let { item, index, toggleShowTasks, changeCategoryTextRedux, submitCategoryInputRedux, changeInputCategoryItemRedux, deleteCategoryItem, addSubCategoryItem } = this.props;
+    let { item, index, changeCategoryTextRedux } = this.props;
     let categoryNode,
         styleSubCategory,
         widthSubCategory,
@@ -44,45 +96,15 @@ class CategoryItem extends Component {
         itemLevel;
 
     if (item.flagChangeText) {
-        categoryNode = <form 
-            className="category-item__form" 
-            onSubmit={(event) => {
-                let element = event.target.children[0],
-                    indexCategory = element.dataset.index,
-                    elementValue  = element.value;
-
-                submitCategoryInputRedux(indexCategory, elementValue);
-            }}
-            >
-            <input 
-                type="text" 
-                className="category-item__form_input" 
-                value={item.text}
-                data-index={index}
-                onChange={(event) => {
-                    let element = event.target.children[0],
-                        indexCategory = event.target.dataset.index,
-                        elementValue  = event.target.value;
-
-                    changeInputCategoryItemRedux(indexCategory, elementValue);
-                }}
-                />
-        </form>;
+        categoryNode = <ChangeItemCategoryForm 
+            item={item} 
+            index={index}
+        />;
     } else {
-        // For correcting the click processing we create different id
-        let idLabel = "category-item__checkbox--label-" + index;
-
-        categoryNode = <span>
-            <input 
-                type="checkbox"
-                id={idLabel}
-                className="category-item__checkbox"
-                onChange={toggleShowTasks.bind(null, index)}
-            />
-            <label htmlFor={idLabel} className="category-item__text">
-                {item.text}
-            </label>
-        </span>;
+        categoryNode = <ChangeItemCategoryNode 
+            item={item} 
+            index={index}
+        />;
     }
 
     // Category alignment
@@ -121,12 +143,16 @@ class CategoryItem extends Component {
                 <ImageComponent 
                     attributeClassName="category-item__delete"
                     srcImage={imageSrcCategoryDelete}
-                    funcOnClick={deleteCategoryItem.bind(null, item.levelCategory, index)}
+                    funcOnClick={() => {
+                        this.deleteCategoryItem(item.levelCategory, index);
+                    }}
                 />
                 <ImageComponent 
                     attributeClassName="category-item__add"
                     srcImage={imageSrcCategoryAdd}
-                    funcOnClick={addSubCategoryItem.bind(null, item.levelCategory, item.id, index)}
+                    funcOnClick={() => {
+                        this.addSubCategoryItem(item.levelCategory, item.id, index);
+                    }}
                 />
     		</div>
     	</div>
@@ -135,14 +161,17 @@ class CategoryItem extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {};
+    return {
+        categoryItemsRedux: state.categoryTitle.categoryItemsRedux
+    };
 }
 
 const mapActionsToProps = (dispatch) => {
     return {
         changeCategoryTextRedux: bindActionCreators(changeCategoryTextRedux, dispatch),
-        submitCategoryInputRedux: bindActionCreators(submitCategoryInputRedux, dispatch),
-        changeInputCategoryItemRedux: bindActionCreators(changeInputCategoryItemRedux, dispatch)
+        deleteCategoryItemRedux: bindActionCreators(deleteCategoryItemRedux, dispatch),
+        addSubCategoryItemRedux: bindActionCreators(addSubCategoryItemRedux, dispatch)
+
     };
 }
 
