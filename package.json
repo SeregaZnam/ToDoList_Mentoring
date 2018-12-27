@@ -8,6 +8,7 @@
     "build": "webpack"
   },
   "dependencies": {
+    "flow-bin": "^0.89.0",
     "prop-types": "^15.6.2",
     "react": "^16.0.0",
     "react-bootstrap": "^0.32.1",

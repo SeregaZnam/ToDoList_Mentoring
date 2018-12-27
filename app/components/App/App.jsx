@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import CategoryArea from '../CategoryArea/CategoryArea.jsx';
 import TasksArea from '../TasksArea/TasksArea.jsx';
